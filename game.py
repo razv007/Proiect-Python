@@ -6,9 +6,10 @@ class Game:
         self.h = h
         self.cells = set()
         self.walls = set()
-        self.pos = (0, 0) 
+        self.pos = (0, 0)
         self.over = False
-        self.won = False
+        self.winner = None
+        self.turn = 0
         self.initial_obs = n_obs
         self.make_grid()
         self.add_walls(n_obs)
@@ -28,35 +29,51 @@ class Game:
         if self.pos in opts: opts.remove(self.pos)
         current_walls = self.walls.copy()
         potential = [c for c in opts if c not in current_walls]
-        
         if len(potential) < n: n = len(potential)
-        new_walls = set(random.sample(potential, n))
-        self.walls.update(new_walls)
+        self.walls.update(set(random.sample(potential, n)))
 
     def get_neighbors(self, q, r):
         dirs = [(1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1), (0, 1)]
         return [(q+dq, r+dr) for dq, dr in dirs]
 
-    def move_mouse(self, q, r):
-        if self.over: return False
+    def has_valid_moves(self):
+        for n in self.get_neighbors(*self.pos):
+            if n not in self.walls:
+                return True
+        return False
 
-        if (q, r) not in self.get_neighbors(*self.pos):
-            return False 
+    def click_tile(self, q, r):
+        if self.over: return
 
-        if (q, r) not in self.cells:
-            self.over = True
-            self.won = True
-            return True
+        if self.turn == 0:
+            if (q, r) == self.pos: return
+            if (q, r) in self.walls: return
+            if (q, r) not in self.cells: return
 
-        if (q, r) in self.walls:
-            return False
+            self.walls.add((q, r))
+            
+            if not self.has_valid_moves():
+                self.over = True
+                self.winner = "BLOCKER"
+            else:
+                self.turn = 1
 
-        self.pos = (q, r)
-        return True
+        elif self.turn == 1:
+            if (q, r) not in self.get_neighbors(*self.pos): return
+            if (q, r) in self.walls: return
+
+            if (q, r) not in self.cells:
+                self.over = True
+                self.winner = "MOUSE"
+                return
+
+            self.pos = (q, r)
+            self.turn = 0
 
     def reset(self):
         self.over = False
-        self.won = False
+        self.winner = None
+        self.turn = 0
         self.walls.clear()
         self.make_grid()
         self.add_walls(self.initial_obs)

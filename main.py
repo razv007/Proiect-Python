@@ -17,32 +17,28 @@ def axial_round(x, y):
     z = -(x + y)
     rx, ry, rz = round(x), round(y), round(z)
     dx, dy, dz = abs(rx - x), abs(ry - y), abs(rz - z)
-    
-    if dx > dy and dx > dz: 
-        rx = -(ry + rz)
-    elif dy > dz:           
-        ry = -(rx + rz)
-    else:                   
-        rz = -(rx + ry)
+    if dx > dy and dx > dz: rx = -(ry + rz)
+    elif dy > dz:           ry = -(rx + rz)
+    else:                   rz = -(rx + ry)
     return int(rx), int(ry)
 
 if __name__ == "__main__":
     pygame.init()
     W, H = 800, 600
     scr = pygame.display.set_mode((W, H))
-    pygame.display.set_caption("Hex Game - Phase 2")
+    pygame.display.set_caption("Hex Game - Phase 3")
     clock = pygame.time.Clock()
     
-    game = Game(w=11, h=11, n_obs=15)
-    
+    game = Game(w=11, h=11, n_obs=10)
     SZ = 25
     CX, CY = W // 2, H // 2
-
+    
     mid_r = game.h // 2
     mid_q = (game.w // 2) - (mid_r // 2)
 
-    font_big = pygame.font.SysFont("Arial", 60, bold=True)
-    font_small = pygame.font.SysFont("Arial", 30)
+    font_big = pygame.font.SysFont("Arial", 50, bold=True)
+    font_small = pygame.font.SysFont("Arial", 25)
+    
     overlay = pygame.Surface((W, H))
     overlay.fill((0, 0, 0))
     overlay.set_alpha(180)
@@ -54,22 +50,32 @@ if __name__ == "__main__":
         raw_q, raw_r = pixel_to_hex(mx, my, SZ, CX, CY)
         hq, hr = raw_q + mid_q, raw_r + mid_r
 
+        if not game.over:
+            turn_msg = "TURA: ZIDAR" if game.turn == 0 else "TURA: SOARECE"
+            turn_col = (200, 200, 50) if game.turn == 0 else (255, 100, 100)
+            txt_turn = font_small.render(turn_msg, True, turn_col)
+            scr.blit(txt_turn, (20, 20))
+
         for q, r in game.cells:
             color = (200, 200, 200)
-            if (q, r) in game.walls: 
-                color = (60, 60, 60)
-            if (q, r) == game.pos:   
-                color = (255, 100, 100)
+            if (q, r) in game.walls: color = (60, 60, 60)
+            if (q, r) == game.pos:   color = (255, 100, 100)
             
             if (q, r) == (hq, hr) and not game.over:
-                is_neighbor = (q, r) in game.get_neighbors(*game.pos)
-                if is_neighbor and (q, r) not in game.walls:
-                    color = (100, 255, 100)
-                elif is_neighbor and (q, r) in game.walls:
-                    color = (100, 50, 50)
-            
+                valid = False
+                
+                if game.turn == 0: 
+                    if (q, r) not in game.walls and (q, r) != game.pos:
+                        valid = True
+                
+                elif game.turn == 1:
+                    is_neighbor = (q, r) in game.get_neighbors(*game.pos)
+                    if is_neighbor and (q, r) not in game.walls:
+                        valid = True
+
+                color = (100, 255, 100) if valid else (255, 50, 50)
+
             px, py = hex_to_pixel(q - mid_q, r - mid_r, SZ, CX, CY)
-            
             pts = []
             for i in range(6):
                 ang = math.radians(60 * i - 30)
@@ -81,24 +87,26 @@ if __name__ == "__main__":
         if game.over:
             scr.blit(overlay, (0, 0))
             
-            msg = "AI CASTIGAT!" if game.won else "E JOVER"
-            c = (100, 255, 100) if game.won else (255, 100, 100)
+            if game.winner == "MOUSE":
+                msg = "SOARECELE A SCAPAT!"
+                c = (255, 100, 100)
+            else:
+                msg = "ZIDARUL A CASTIGAT!"
+                c = (200, 200, 50)
+                
             txt = font_big.render(msg, True, c)
-            text_rect = txt.get_rect(center=(W//2, H//2 - 20))
-            scr.blit(txt, text_rect)
+            tr = txt.get_rect(center=(W//2, H//2 - 20))
+            scr.blit(txt, tr)
             
-            sub = font_small.render("Apasa R pentru Reset", True, (200,200,200))
-            sub_rect = sub.get_rect(center=(W//2, H//2 + 40))
-            scr.blit(sub, sub_rect)
+            sub = font_small.render("R - Reset", True, (200,200,200))
+            sr = sub.get_rect(center=(W//2, H//2 + 40))
+            scr.blit(sub, sr)
 
         for e in pygame.event.get():
             if e.type == pygame.QUIT: run = False
-            
-            if e.type == pygame.KEYDOWN and e.key == pygame.K_r: 
-                game.reset()
-            
+            if e.type == pygame.KEYDOWN and e.key == pygame.K_r: game.reset()
             if e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
-                game.move_mouse(hq, hr)
+                game.click_tile(hq, hr)
 
         pygame.display.flip()
         clock.tick(60)
