@@ -1,4 +1,6 @@
 import random
+import pickle
+import os
 from collections import deque
 
 class Game:
@@ -8,17 +10,24 @@ class Game:
         self.mode = mode
         self.difficulty = difficulty
         self.player_role = player_role
+        self.initial_obs = n_obs
+        
         self.cells = set()
         self.walls = set()
         self.pos = (0, 0)
         self.over = False
         self.winner = None
         self.turn = 0
-        self.initial_obs = n_obs
+        
+        self.history = []
+        self.redo_stack = []
+        self.current_filename = None
+
         self.make_grid()
         self.add_walls(n_obs)
 
         if self.mode == "AI" and self.player_role == "MOUSE":
+            self.save_state()
             self.ai_move_blocker()
 
     def make_grid(self):
@@ -38,8 +47,88 @@ class Game:
             opts.remove(self.pos)
         current_walls = self.walls.copy()
         potential = [c for c in opts if c not in current_walls]
-        if len(potential) < n: n = len(potential)
+        if len(potential) < n: 
+            n = len(potential)
         self.walls.update(set(random.sample(potential, n)))
+
+    def save_state(self):
+        state = {
+            'walls': self.walls.copy(),
+            'pos': self.pos,
+            'turn': self.turn,
+            'over': self.over,
+            'winner': self.winner
+        }
+        self.history.append(state)
+        self.redo_stack.clear() 
+
+    def undo(self):
+        if not self.history: return
+        
+        current_state = {
+            'walls': self.walls.copy(),
+            'pos': self.pos,
+            'turn': self.turn,
+            'over': self.over,
+            'winner': self.winner
+        }
+        self.redo_stack.append(current_state)
+
+        prev = self.history.pop()
+        self.walls = prev['walls']
+        self.pos = prev['pos']
+        self.turn = prev['turn']
+        self.over = prev['over']
+        self.winner = prev['winner']
+
+    def redo(self):
+        if not self.redo_stack: return
+
+        current_state = {
+            'walls': self.walls.copy(),
+            'pos': self.pos,
+            'turn': self.turn,
+            'over': self.over,
+            'winner': self.winner
+        }
+        self.history.append(current_state)
+
+        next_st = self.redo_stack.pop()
+        self.walls = next_st['walls']
+        self.pos = next_st['pos']
+        self.turn = next_st['turn']
+        self.over = next_st['over']
+        self.winner = next_st['winner']
+
+    def save_to_file(self, filename):
+        try:
+            folder = "saves"
+            if not os.path.exists(folder):
+                os.makedirs(folder)
+            
+            full_path = os.path.join(folder, filename)
+            
+            with open(full_path, "wb") as f:
+                pickle.dump(self, f)
+            
+            self.current_filename = filename
+            return True
+        except:
+            return False
+
+    def load_from_file(filename):
+        try:
+            folder = "saves"
+            full_path = os.path.join(folder, filename)
+            if not os.path.exists(full_path):
+                return None
+                
+            with open(full_path, "rb") as f:
+                game_obj = pickle.load(f)
+                game_obj.current_filename = filename
+                return game_obj
+        except:
+            return None
 
     def get_neighbors(self, q, r):
         dirs = [(1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1), (0, 1)]
@@ -54,14 +143,12 @@ class Game:
     def get_shortest_path(self, start_pos):
         queue = deque([(start_pos, [])])
         visited = set([start_pos])
-
         while queue:
             current, path = queue.popleft()
             for neighbor in self.get_neighbors(*current):
                 if neighbor not in self.cells:
                     if path: return path[0] 
                     else: return neighbor
-                
                 if neighbor not in self.walls and neighbor not in visited:
                     visited.add(neighbor)
                     new_path = path + [neighbor]
@@ -71,11 +158,19 @@ class Game:
     def click_tile(self, q, r):
         if self.over: return
 
+        self.save_state()
+
         if self.player_role == "BLOCKER" or self.mode == "PVP":
             if self.turn == 0:
-                if (q, r) == self.pos: return
-                if (q, r) in self.walls: return
-                if (q, r) not in self.cells: return
+                if (q, r) == self.pos: 
+                    self.undo()
+                    return
+                if (q, r) in self.walls: 
+                    self.undo()
+                    return
+                if (q, r) not in self.cells: 
+                    self.undo()
+                    return
 
                 self.walls.add((q, r))
                 self.check_game_state_after_block()
@@ -87,26 +182,27 @@ class Game:
             
             elif self.turn == 1 and self.mode == "PVP":
                 moved = self.human_move_mouse(q, r)
-                if moved:
+                if moved: 
                     self.turn = 0
+                else: 
+                    self.undo()
 
         elif self.player_role == "MOUSE" and self.mode == "AI":
             if self.turn == 1:
                 moved = self.human_move_mouse(q, r)
-                
                 if moved and not self.over:
                     self.turn = 0
                     self.ai_move_blocker()
+                elif not moved:
+                    self.undo()
 
     def human_move_mouse(self, q, r):
         if (q, r) not in self.get_neighbors(*self.pos): return False
         if (q, r) in self.walls: return False
-
         if (q, r) not in self.cells:
             self.over = True
             self.winner = "MOUSE"
             return True
-
         self.pos = (q, r)
         return True
 
@@ -118,17 +214,13 @@ class Game:
     def ai_move_mouse(self):
         neighbors = self.get_neighbors(*self.pos)
         valid_moves = [n for n in neighbors if n not in self.walls]
-
         if not valid_moves:
             self.over = True
             self.winner = "BLOCKER"
             return
-
         move = None
-
         if self.difficulty == "EASY":
             move = random.choice(valid_moves)
-
         elif self.difficulty == "MEDIUM":
             move = self.get_shortest_path(self.pos)
             if not move or move not in valid_moves:
@@ -150,23 +242,27 @@ class Game:
 
     def ai_move_blocker(self):
         if self.over: return
-        
-        path_node = self.get_shortest_path(self.pos)
         target_wall = None
-
         if self.difficulty == "EASY":
             opts = [c for c in self.cells if c not in self.walls and c != self.pos]
-            if opts: target_wall = random.choice(opts)
-
-        else:
-            if path_node:
-                if path_node not in self.walls and path_node != self.pos:
-                    target_wall = path_node
-            
-            if not target_wall:
-                neighbors = self.get_neighbors(*self.pos)
-                opts = [n for n in neighbors if n not in self.walls]
-                if opts: target_wall = random.choice(opts)
+            if opts: 
+                target_wall = random.choice(opts)
+        elif self.difficulty == "MEDIUM":
+            move = self.get_shortest_path(self.pos)
+            if move and move not in self.walls and move != self.pos:
+                target_wall = move
+            else:
+                opts = [c for c in self.cells if c not in self.walls and c != self.pos]
+                if opts: 
+                    target_wall = random.choice(opts)
+        elif self.difficulty == "HARD":
+            move = self.get_shortest_path(self.pos)
+            if move and move not in self.walls and move != self.pos:
+                target_wall = move
+            else:
+                opts = [c for c in self.cells if c not in self.walls and c != self.pos]
+                if opts:
+                    target_wall = random.choice(opts)
 
         if target_wall:
             self.walls.add(target_wall)
@@ -177,9 +273,11 @@ class Game:
         self.over = False
         self.winner = None
         self.turn = 0
+        self.history.clear()
+        self.redo_stack.clear()
         self.walls.clear()
+        self.current_filename = None
         self.make_grid()
         self.add_walls(self.initial_obs)
-        
         if self.mode == "AI" and self.player_role == "MOUSE":
             self.ai_move_blocker()
