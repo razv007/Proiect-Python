@@ -48,6 +48,10 @@ if __name__ == "__main__":
     pygame.display.set_caption("TrapTheMouse")
     clock = pygame.time.Clock()
     
+    mouse_img_raw = None
+    if os.path.exists("mouse.png"):
+        mouse_img_raw = pygame.image.load("mouse.png")
+
     font_title = pygame.font.SysFont("Arial", 50, bold=True)
     font_btn = pygame.font.SysFont("Arial", 28)
     font_small = pygame.font.SysFont("Arial", 18)
@@ -197,6 +201,9 @@ if __name__ == "__main__":
         elif state == "GAME":
             SZ = get_hex_size(game.w, game.h, W, H - 110)
             
+            if mouse_img_raw:
+                scaled_mouse_img = pygame.transform.scale(mouse_img_raw, (SZ * 1.5, SZ * 1.5))
+
             if not game.over:
                 role_txt = "Zidar" if game.player_role == "BLOCKER" else "Soarece"
                 diff_txt = f"{game.difficulty}" if game.mode == "AI" else "PVP"
@@ -242,6 +249,10 @@ if __name__ == "__main__":
                     pts.append((px + SZ * math.cos(ang), py + SZ * math.sin(ang)))
                 pygame.draw.polygon(scr, color, pts)
                 pygame.draw.polygon(scr, (0, 0, 0), pts, 2)
+
+                if (q, r) == game.pos and scaled_mouse_img:
+                    r_img = scaled_mouse_img.get_rect(center=(px, py))
+                    scr.blit(scaled_mouse_img, r_img)
 
             draw_button(scr, btn_undo, "Undo", font_small, (mx, my))
             can_redo = len(game.redo_stack) > 0
