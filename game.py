@@ -168,8 +168,7 @@ class Game:
         except:
             return False
 
-    @staticmethod
-    def load_from_file(filename):
+    def load_from_file(self, filename):
         """Load a game instance from a save file.
         
         Args:
@@ -221,13 +220,11 @@ class Game:
         """
         if self.over: return
 
-        self.save_state()
-
         if self.player_role == "BLOCKER" or self.mode == "PVP":
             if self.turn == 0:
                 if (q, r) == self.pos or (q, r) in self.walls or (q, r) not in self.cells:
-                    self.undo()
                     return
+                self.save_state()
                 self.walls.add((q, r))
                 self.check_game_state_after_block()
                 
@@ -237,6 +234,7 @@ class Game:
                         self.ai_move_mouse()
             
             elif self.turn == 1 and self.mode == "PVP":
+                self.save_state()
                 moved = self.human_move_mouse(q, r)
                 if moved: 
                     self.turn = 0
@@ -245,6 +243,7 @@ class Game:
 
         elif self.player_role == "MOUSE" and self.mode == "AI":
             if self.turn == 1:
+                self.save_state()
                 moved = self.human_move_mouse(q, r)
                 if moved and not self.over:
                     self.turn = 0
@@ -300,7 +299,6 @@ class Game:
 
     def ai_move_blocker(self):
         """Execute AI-controlled blocker move to place an optimal wall."""
-        self.save_state()
         if self.over: return
         target_wall = None
         
