@@ -137,7 +137,9 @@ class Game:
 
     def has_valid_moves(self):
         for n in self.get_neighbors(*self.pos):
-            if n not in self.walls:
+            if n not in self.cells:
+                return True
+            if n in self.cells and n not in self.walls:
                 return True
         return False
 
@@ -182,7 +184,7 @@ class Game:
                     IN[v] += IN[u]
 
         for ex in exits:
-            OUT[ex] = 2
+            OUT[ex] = 1 
 
         nods = sorted(dist.keys(), key=lambda x: -dist[x])
         for u in nods:
@@ -195,8 +197,8 @@ class Game:
         total = OUT[start]
         return IN, OUT, total
 
-    def build_dinic(self, blocked):
-        dist = self.bfs_dist(self.pos, blocked)
+    def build_dinic(self, start, blocked):
+        dist = self.bfs_dist(start, blocked)
         edge_nodes = [n for n in dist if self.final_hex(n)]
         
         if not edge_nodes: 
@@ -213,10 +215,10 @@ class Game:
             graph[u].append([v, cap, len(graph[v])])
             graph[v].append([u, 0, len(graph[u]) - 1])
 
-        add_edge(S, f"{self.pos}_in", INF)
+        add_edge(S, f"{start}_in", INF)
 
         for u in dist:
-            cap_node = INF if u == self.pos else 1
+            cap_node = INF if u == start else 1
             add_edge(f"{u}_in", f"{u}_out", cap_node)
             
             if self.final_hex(u) and dist[u] == min_dist:
@@ -285,9 +287,9 @@ class Game:
 
         candidates = []
         
-        gamma = 0.7       
-        w1 = 0.7          
-        w2 = 0.3          
+        gamma = 0.4      
+        w1 = 0.5          
+        w2 = 0.5          
         
         level_sums = collections.defaultdict(int)
         for u in dist:
@@ -321,7 +323,7 @@ class Game:
         candidates.sort(key=lambda x: x[1], reverse=True)
         top_k = candidates[:15]
         
-        base_graph, S, T = self.build_dinic(blocked)
+        base_graph, S, T = self.build_dinic(mouse_pos, blocked)
         if not base_graph: 
             return top_k[0][0]
         
@@ -329,7 +331,7 @@ class Game:
         
         best_hex = None
         max_score = -10**9
-        alpha_cut = 1.0
+        alpha_cut = 3.0
         
         nodes_in_flow = set()
         for u in dist:
@@ -351,7 +353,7 @@ class Game:
                 temp_blocked = blocked.copy()
                 temp_blocked.add(u)
                 
-                temp_graph, tS, tT = self.build_dinic(temp_blocked)
+                temp_graph, tS, tT = self.build_dinic(mouse_pos,temp_blocked)
                 if temp_graph:
                     new_cut = self.dinic(tS, tT, temp_graph)
                     marginal_cut = max(0, base_cut - new_cut)
@@ -363,7 +365,87 @@ class Game:
                 best_hex = u
 
         return best_hex if best_hex else top_k[0][0]
+    
+    def winning_hex(self, blocked):
+        hexes = {}
+        queue = deque()
+        for cell in self.cells:
+            if cell not in blocked and self.final_hex(cell):
+                hexes[cell] = 1
+                queue.append(cell)
+        
+        while queue:
+            u = queue.popleft()
+            for v in self.get_neighbors(*u):
+                if v not in self.cells or v in blocked or v in hexes:
+                    continue
+                nod = -1
+                mapp=collections.defaultdict(int)
+                for nb in self.get_neighbors(*v):
+                    if nb in hexes:
+                        if(hexes[nb]<=2):
+                            mapp[hexes[nb]] += 1
+                            if(mapp[hexes[nb]]==2):
+                                nod=hexes[nb]
+                if nod!=-1:
+                    hexes[v] = nod + 1
+                    queue.append(v)
 
+        return hexes
+
+    def score_mouse(self, move, blocked, win_hexes):
+        if move in win_hexes:
+            return 10**9
+            
+        q = deque([(move, 0)])
+        viz = {move: 0}
+        total = 0.0
+        ok = False
+        while q:
+            curr, dist = q.popleft()
+            
+            if self.final_hex(curr):
+                ok = True
+                weight = 100.0 / math.pow(dist + 1.0, 2)
+                total += weight
+            
+            for n in self.get_neighbors(*curr):
+                if n in self.cells and n not in blocked and n not in viz:
+                    viz[n] = dist + 1
+                    q.append((n, dist + 1))
+        if not ok:
+            return -10**9
+        return total
+
+    def best_move_mouse(self, mouse_pos, blocked):
+        neighbors = self.get_neighbors(*mouse_pos)
+        valid_moves = []
+        
+        for n in neighbors:
+            if n not in self.cells:
+                return n
+            if n not in blocked:
+                valid_moves.append(n)
+        
+        if not valid_moves:
+            return None
+            
+        win_hexes = self.winning_hex(blocked)
+        best_move = None
+        best_score = -10**9
+        
+        for move in valid_moves:
+            if self.final_hex(move):
+                return move
+                
+            score = self.score_mouse(move, blocked, win_hexes)
+            score += random.uniform(0, 0.1)
+            
+            if score > best_score:
+                best_score = score
+                best_move = move
+        return best_move if best_move else random.choice(valid_moves)
+    
     def get_shortest_path(self, start_pos):
         queue = deque([start_pos])
         prev = {start_pos: None}
@@ -451,9 +533,9 @@ class Game:
                 move = random.choice(valid_moves)
 
         elif self.difficulty == "HARD":
-            move = self.get_shortest_path(self.pos)
-            if not move or move not in valid_moves:
-                move = random.choice(valid_moves)
+             move = self.best_move_mouse(self.pos, self.walls)
+             if not move or move not in valid_moves:
+                 move = random.choice(valid_moves)
 
         if move not in self.cells:
             self.over = True
@@ -467,6 +549,7 @@ class Game:
     def ai_move_blocker(self):
         if self.over: return
         target_wall = None
+        
         if self.difficulty == "EASY":
             opts = [c for c in self.cells if c not in self.walls and c != self.pos]
             if opts: 
@@ -480,13 +563,7 @@ class Game:
                 if opts: 
                     target_wall = random.choice(opts)
         elif self.difficulty == "HARD":
-            move = self.get_shortest_path(self.pos)
-            if move and move not in self.walls and move != self.pos:
-                target_wall = move
-            else:
-                opts = [c for c in self.cells if c not in self.walls and c != self.pos]
-                if opts:
-                    target_wall = random.choice(opts)
+            target_wall = self.best_wall(self.pos, self.walls)
 
         if target_wall:
             self.walls.add(target_wall)
