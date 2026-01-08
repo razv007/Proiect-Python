@@ -199,7 +199,7 @@ def best_wall(game, mouse_pos, blocked):
 
     candidates = []
     
-    gamma = 0.4      
+    gamma = 0.7      
     w1 = 0.5          
     w2 = 0.5          
     
