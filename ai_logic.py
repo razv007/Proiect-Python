@@ -1,8 +1,24 @@
+"""AI logic and decision-making algorithms for the Trap the Mouse game.
+
+This module implements sophisticated AI algorithms including breadth-first
+search, Dinic's maximum flow algorithm, and various heuristics for optimal
+move selection in both blocker and mouse roles.
+"""
 import random
 import math
 import collections
 
 def bfs_dist(game, start, blocked):
+    """Calculate distances from start to all reachable cells using BFS.
+    
+    Args:
+        game: Game instance containing grid and neighbor information.
+        start: Starting cell tuple (q, r).
+        blocked: Set of blocked/wall cells.
+    
+    Returns:
+        Dictionary mapping cell coordinates to their distance from start.
+    """
     queue = collections.deque([(start, 0)])
     viz = {start: 0}
     while queue:
@@ -14,6 +30,17 @@ def bfs_dist(game, start, blocked):
     return viz
 
 def dp_IN_OUT(game, dist, blocked, start):
+    """Calculate incoming and outgoing path counts using dynamic programming.
+    
+    Args:
+        game: Game instance.
+        dist: Dictionary of distances from start to cells.
+        blocked: Set of blocked cells.
+        start: Starting cell.
+    
+    Returns:
+        Tuple of (IN, OUT, total) where IN/OUT are dicts of path counts.
+    """
     edge_nodes = [n for n in dist if game.final_hex(n)]
     if not edge_nodes: return {}, {}, 0
 
@@ -48,6 +75,16 @@ def dp_IN_OUT(game, dist, blocked, start):
     return IN, OUT, total
 
 def build_dinic(game, start, blocked):
+    """Build a flow network graph for Dinic's algorithm.
+    
+    Args:
+        game: Game instance.
+        start: Starting cell for the mouse.
+        blocked: Set of blocked/wall cells.
+    
+    Returns:
+        Tuple of (graph, source_node, target_node) or (None, None, None).
+    """
     dist = bfs_dist(game, start, blocked)
     edge_nodes = [n for n in dist if game.final_hex(n)]
     
@@ -82,6 +119,17 @@ def build_dinic(game, start, blocked):
     return graph, S, T
 
 def dinic_bfs(s, t, graph, level):
+    """Perform BFS for Dinic's algorithm to build level graph.
+    
+    Args:
+        s: Source node.
+        t: Target (sink) node.
+        graph: Flow network graph.
+        level: Dictionary to store node levels (modified in-place).
+    
+    Returns:
+        True if target is reachable from source, False otherwise.
+    """
     level.clear()
     level[s] = 0
     queue = collections.deque([s])
@@ -124,6 +172,20 @@ def dinic(S, T, graph):
     return max_flow
 
 def best_wall(game, mouse_pos, blocked):
+    """Determine the optimal wall placement to block the mouse.
+    
+    Uses a combination of path probability analysis and max-flow cut
+    calculations to find the wall position that maximally disrupts
+    the mouse's escape routes.
+    
+    Args:
+        game: Game instance.
+        mouse_pos: Current mouse position tuple (q, r).
+        blocked: Set of currently blocked cells.
+    
+    Returns:
+        Cell coordinates (q, r) for optimal wall placement, or None.
+    """
     dist = bfs_dist(game, mouse_pos, blocked)
     if not dist: 
         opts = [c for c in game.cells if c not in blocked and c != mouse_pos]
@@ -181,7 +243,7 @@ def best_wall(game, mouse_pos, blocked):
     
     best_hex = None
     max_score = -10**9
-    alpha_cut = 3.0
+    alpha_cut = 1.0
     
     nodes_in_flow = set()
     for u in dist:
@@ -217,6 +279,15 @@ def best_wall(game, mouse_pos, blocked):
     return best_hex if best_hex else top_k[0][0]
 
 def winning_hex(game, blocked):
+    """Identify cells that guarantee mouse victory if reached.
+    
+    Args:
+        game: Game instance.
+        blocked: Set of blocked cells.
+    
+    Returns:
+        Dictionary mapping winning cells to their distance from edges.
+    """
     hexes = {}
     queue = collections.deque()
     for cell in game.cells:
@@ -244,6 +315,17 @@ def winning_hex(game, blocked):
     return hexes
 
 def score_mouse(game, move, blocked, win_hexes):
+    """Calculate a score for a potential mouse move.
+    
+    Args:
+        game: Game instance.
+        move: Candidate move cell (q, r).
+        blocked: Set of blocked cells.
+        win_hexes: Dictionary of winning positions.
+    
+    Returns:
+        Numeric score (higher is better, 10^9 for winning moves).
+    """
     if move in win_hexes:
         return 10**9
         
@@ -268,6 +350,16 @@ def score_mouse(game, move, blocked, win_hexes):
     return total
 
 def best_move_mouse(game, mouse_pos, blocked):
+    """Determine the best move for the mouse using advanced heuristics.
+    
+    Args:
+        game: Game instance.
+        mouse_pos: Current mouse position (q, r).
+        blocked: Set of blocked cells.
+    
+    Returns:
+        Best move cell coordinates (q, r), or None if no valid moves.
+    """
     neighbors = game.get_neighbors(*mouse_pos)
     valid_moves = []
     
@@ -297,6 +389,15 @@ def best_move_mouse(game, mouse_pos, blocked):
     return best_move if best_move else random.choice(valid_moves)
 
 def get_shortest_path(game, start_pos):
+    """Find the first move on the shortest path to the grid edge.
+    
+    Args:
+        game: Game instance.
+        start_pos: Starting position (q, r).
+    
+    Returns:
+        Next move coordinates (q, r) towards nearest edge, or None.
+    """
     queue = collections.deque([start_pos])
     prev = {start_pos: None}
     while queue:

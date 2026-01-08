@@ -1,3 +1,9 @@
+"""Core game logic and state management for Trap the Mouse.
+
+This module contains the Game class which encapsulates all game rules,
+state management, AI integration, and save/load functionality for the
+Trap the Mouse game.
+"""
 import random
 import pickle
 import os
@@ -7,7 +13,39 @@ import ai_logic
 
 
 class Game:
+    """Represents a Trap the Mouse game instance.
+    
+    This class manages the hexagonal grid, mouse and wall positions,
+    turn-based gameplay, AI opponents, undo/redo functionality, and
+    persistent storage of game states.
+    
+    Attributes:
+        w: Grid width in hexagons.
+        h: Grid height in hexagons.
+        mode: Game mode ("AI" or "PVP").
+        difficulty: AI difficulty level ("EASY", "MEDIUM", "HARD").
+        player_role: Player's role ("BLOCKER" or "MOUSE").
+        cells: Set of all grid cell coordinates.
+        walls: Set of wall/blocked cell coordinates.
+        pos: Current mouse position as (q, r) tuple.
+        over: Boolean indicating if game has ended.
+        winner: Winning side ("BLOCKER" or "MOUSE"), None if ongoing.
+        turn: Current turn (0 = blocker, 1 = mouse).
+        history: List of previous game states for undo.
+        redo_stack: Stack of undone states for redo.
+        current_filename: Name of save file if game was loaded.
+    """
     def __init__(self, mode="AI", difficulty="MEDIUM", player_role="BLOCKER", w=11, h=11, n_obs=10):
+        """Initialize a new game instance.
+        
+        Args:
+            mode: Game mode, "AI" or "PVP" (default "AI").
+            difficulty: AI difficulty, "EASY"/"MEDIUM"/"HARD" (default "MEDIUM").
+            player_role: Player's role, "BLOCKER" or "MOUSE" (default "BLOCKER").
+            w: Grid width (default 11).
+            h: Grid height (default 11).
+            n_obs: Number of initial random obstacles (default 10).
+        """
         self.w = w
         self.h = h
         self.mode = mode
@@ -34,6 +72,7 @@ class Game:
             self.ai_move_blocker()
 
     def make_grid(self):
+        """Generate hexagonal grid cells and initialize mouse position."""
         self.cells.clear()
         for r in range(self.h):
             for c in range(self.w):
@@ -55,6 +94,7 @@ class Game:
         self.walls.update(set(random.sample(potential, n)))
 
     def save_state(self):
+        """Save current game state to history for undo functionality."""
         state = {
             'walls': self.walls.copy(),
             'pos': self.pos,
@@ -66,6 +106,7 @@ class Game:
         self.redo_stack.clear() 
 
     def undo(self):
+        """Undo the last move, restoring previous game state."""
         if not self.history: return
         
         current_state = {
@@ -85,6 +126,7 @@ class Game:
         self.winner = prev['winner']
 
     def redo(self):
+        """Redo a previously undone move."""
         if not self.redo_stack: return
 
         current_state = {
@@ -104,6 +146,14 @@ class Game:
         self.winner = next_st['winner']
 
     def save_to_file(self, filename):
+        """Save game state to a file using pickle.
+        
+        Args:
+            filename: Name of save file.
+        
+        Returns:
+            True if save succeeded, False otherwise.
+        """
         try:
             folder = "saves"
             if not os.path.exists(folder):
@@ -120,6 +170,14 @@ class Game:
 
     @staticmethod
     def load_from_file(filename):
+        """Load a game instance from a save file.
+        
+        Args:
+            filename: Name of save file to load.
+        
+        Returns:
+            Game instance if successful, None otherwise.
+        """
         try:
             folder = "saves"
             full_path = os.path.join(folder, filename)
@@ -155,6 +213,12 @@ class Game:
         return False
 
     def click_tile(self, q, r):
+        """Handle mouse click on a hex tile.
+        
+        Args:
+            q: Hexagon q coordinate.
+            r: Hexagon r coordinate.
+        """
         if self.over: return
 
         self.save_state()
@@ -204,6 +268,7 @@ class Game:
             self.winner = "BLOCKER"
 
     def ai_move_mouse(self):
+        """Execute AI-controlled mouse move based on difficulty level."""
         neighbors = self.get_neighbors(*self.pos)
         valid_moves = [n for n in neighbors if n not in self.walls]
         if not valid_moves:
@@ -234,6 +299,7 @@ class Game:
         self.check_game_state_after_block()
 
     def ai_move_blocker(self):
+        """Execute AI-controlled blocker move to place an optimal wall."""
         self.save_state()
         if self.over: return
         target_wall = None
@@ -259,6 +325,7 @@ class Game:
             self.check_game_state_after_block()
 
     def reset(self):
+        """Reset game to initial state with same configuration."""
         self.over = False
         self.winner = None
         self.turn = 0

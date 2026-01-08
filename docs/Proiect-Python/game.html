@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>Proiect-Python.game API documentation</title>
+<meta name="description" content="Core game logic and state management for Trap the Mouse …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>Proiect-Python.game</code></h1>
+</header>
+<section id="section-intro">
+<p>Core game logic and state management for Trap the Mouse.</p>
+<p>This module contains the Game class which encapsulates all game rules,
+state management, AI integration, and save/load functionality for the
+Trap the Mouse game.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="Proiect-Python.game.Game"><code class="flex name class">
+<span>class <span class="ident">Game</span></span>
+<span>(</span><span>mode='AI', difficulty='MEDIUM', player_role='BLOCKER', w=11, h=11, n_obs=10)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Game:
+    &#34;&#34;&#34;Represents a Trap the Mouse game instance.
+    
+    This class manages the hexagonal grid, mouse and wall positions,
+    turn-based gameplay, AI opponents, undo/redo functionality, and
+    persistent storage of game states.
+    
+    Attributes:
+        w: Grid width in hexagons.
+        h: Grid height in hexagons.
+        mode: Game mode (&#34;AI&#34; or &#34;PVP&#34;).
+        difficulty: AI difficulty level (&#34;EASY&#34;, &#34;MEDIUM&#34;, &#34;HARD&#34;).
+        player_role: Player&#39;s role (&#34;BLOCKER&#34; or &#34;MOUSE&#34;).
+        cells: Set of all grid cell coordinates.
+        walls: Set of wall/blocked cell coordinates.
+        pos: Current mouse position as (q, r) tuple.
+        over: Boolean indicating if game has ended.
+        winner: Winning side (&#34;BLOCKER&#34; or &#34;MOUSE&#34;), None if ongoing.
+        turn: Current turn (0 = blocker, 1 = mouse).
+        history: List of previous game states for undo.
+        redo_stack: Stack of undone states for redo.
+        current_filename: Name of save file if game was loaded.
+    &#34;&#34;&#34;
+    def __init__(self, mode=&#34;AI&#34;, difficulty=&#34;MEDIUM&#34;, player_role=&#34;BLOCKER&#34;, w=11, h=11, n_obs=10):
+        &#34;&#34;&#34;Initialize a new game instance.
+        
+        Args:
+            mode: Game mode, &#34;AI&#34; or &#34;PVP&#34; (default &#34;AI&#34;).
+            difficulty: AI difficulty, &#34;EASY&#34;/&#34;MEDIUM&#34;/&#34;HARD&#34; (default &#34;MEDIUM&#34;).
+            player_role: Player&#39;s role, &#34;BLOCKER&#34; or &#34;MOUSE&#34; (default &#34;BLOCKER&#34;).
+            w: Grid width (default 11).
+            h: Grid height (default 11).
+            n_obs: Number of initial random obstacles (default 10).
+        &#34;&#34;&#34;
+        self.w = w
+        self.h = h
+        self.mode = mode
+        self.difficulty = difficulty
+        self.player_role = player_role
+        self.initial_obs = n_obs
+        
+        self.cells = set()
+        self.walls = set()
+        self.pos = (0, 0)
+        self.over = False
+        self.winner = None
+        self.turn = 0
+        
+        self.history = []
+        self.redo_stack = []
+        self.current_filename = None
+
+        self.make_grid()
+        self.add_walls(n_obs)
+
+        if self.mode == &#34;AI&#34; and self.player_role == &#34;MOUSE&#34;:
+            self.save_state()
+            self.ai_move_blocker()
+
+    def make_grid(self):
+        &#34;&#34;&#34;Generate hexagonal grid cells and initialize mouse position.&#34;&#34;&#34;
+        self.cells.clear()
+        for r in range(self.h):
+            for c in range(self.w):
+                q = c - (r // 2)
+                self.cells.add((q, r))
+        
+        cr = self.h // 2
+        cc = self.w // 2
+        self.pos = (cc - (cr // 2), cr)
+
+    def add_walls(self, n):
+        opts = list(self.cells)
+        if self.pos in opts:
+            opts.remove(self.pos)
+        current_walls = self.walls.copy()
+        potential = [c for c in opts if c not in current_walls]
+        if len(potential) &lt; n: 
+            n = len(potential)
+        self.walls.update(set(random.sample(potential, n)))
+
+    def save_state(self):
+        &#34;&#34;&#34;Save current game state to history for undo functionality.&#34;&#34;&#34;
+        state = {
+            &#39;walls&#39;: self.walls.copy(),
+            &#39;pos&#39;: self.pos,
+            &#39;turn&#39;: self.turn,
+            &#39;over&#39;: self.over,
+            &#39;winner&#39;: self.winner
+        }
+        self.history.append(state)
+        self.redo_stack.clear() 
+
+    def undo(self):
+        &#34;&#34;&#34;Undo the last move, restoring previous game state.&#34;&#34;&#34;
+        if not self.history: return
+        
+        current_state = {
+            &#39;walls&#39;: self.walls.copy(),
+            &#39;pos&#39;: self.pos,
+            &#39;turn&#39;: self.turn,
+            &#39;over&#39;: self.over,
+            &#39;winner&#39;: self.winner
+        }
+        self.redo_stack.append(current_state)
+
+        prev = self.history.pop()
+        self.walls = prev[&#39;walls&#39;]
+        self.pos = prev[&#39;pos&#39;]
+        self.turn = prev[&#39;turn&#39;]
+        self.over = prev[&#39;over&#39;]
+        self.winner = prev[&#39;winner&#39;]
+
+    def redo(self):
+        &#34;&#34;&#34;Redo a previously undone move.&#34;&#34;&#34;
+        if not self.redo_stack: return
+
+        current_state = {
+            &#39;walls&#39;: self.walls.copy(),
+            &#39;pos&#39;: self.pos,
+            &#39;turn&#39;: self.turn,
+            &#39;over&#39;: self.over,
+            &#39;winner&#39;: self.winner
+        }
+        self.history.append(current_state)
+
+        next_st = self.redo_stack.pop()
+        self.walls = next_st[&#39;walls&#39;]
+        self.pos = next_st[&#39;pos&#39;]
+        self.turn = next_st[&#39;turn&#39;]
+        self.over = next_st[&#39;over&#39;]
+        self.winner = next_st[&#39;winner&#39;]
+
+    def save_to_file(self, filename):
+        &#34;&#34;&#34;Save game state to a file using pickle.
+        
+        Args:
+            filename: Name of save file.
+        
+        Returns:
+            True if save succeeded, False otherwise.
+        &#34;&#34;&#34;
+        try:
+            folder = &#34;saves&#34;
+            if not os.path.exists(folder):
+                os.makedirs(folder)
+            full_path = os.path.join(folder, filename)
+            
+            with open(full_path, &#34;wb&#34;) as f:
+                pickle.dump(self, f)
+            
+            self.current_filename = filename
+            return True
+        except:
+            return False
+
+    @staticmethod
+    def load_from_file(filename):
+        &#34;&#34;&#34;Load a game instance from a save file.
+        
+        Args:
+            filename: Name of save file to load.
+        
+        Returns:
+            Game instance if successful, None otherwise.
+        &#34;&#34;&#34;
+        try:
+            folder = &#34;saves&#34;
+            full_path = os.path.join(folder, filename)
+            if not os.path.exists(full_path):
+                return None
+                
+            with open(full_path, &#34;rb&#34;) as f:
+                game_obj = pickle.load(f)
+                game_obj.current_filename = filename
+                return game_obj
+        except:
+            return None
+
+    def get_neighbors(self, q, r):
+        dirs = [(1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1), (0, 1)]
+        return [(q + dq, r + dr) for dq, dr in dirs]
+
+    def has_valid_moves(self):
+        for n in self.get_neighbors(*self.pos):
+            if n not in self.cells:
+                return True
+            if n in self.cells and n not in self.walls:
+                return True
+        return False
+
+    def final_hex(self, cell):
+        if cell not in self.cells: 
+            return False
+        neighbors = self.get_neighbors(*cell)
+        for n in neighbors:
+            if n not in self.cells:
+                return True
+        return False
+
+    def click_tile(self, q, r):
+        &#34;&#34;&#34;Handle mouse click on a hex tile.
+        
+        Args:
+            q: Hexagon q coordinate.
+            r: Hexagon r coordinate.
+        &#34;&#34;&#34;
+        if self.over: return
+
+        self.save_state()
+
+        if self.player_role == &#34;BLOCKER&#34; or self.mode == &#34;PVP&#34;:
+            if self.turn == 0:
+                if (q, r) == self.pos or (q, r) in self.walls or (q, r) not in self.cells:
+                    self.undo()
+                    return
+                self.walls.add((q, r))
+                self.check_game_state_after_block()
+                
+                if not self.over:
+                    self.turn = 1
+                    if self.mode == &#34;AI&#34;:
+                        self.ai_move_mouse()
+            
+            elif self.turn == 1 and self.mode == &#34;PVP&#34;:
+                moved = self.human_move_mouse(q, r)
+                if moved: 
+                    self.turn = 0
+                else: 
+                    self.undo()
+
+        elif self.player_role == &#34;MOUSE&#34; and self.mode == &#34;AI&#34;:
+            if self.turn == 1:
+                moved = self.human_move_mouse(q, r)
+                if moved and not self.over:
+                    self.turn = 0
+                    self.ai_move_blocker()
+                elif not moved:
+                    self.undo()
+
+    def human_move_mouse(self, q, r):
+        if (q, r) not in self.get_neighbors(*self.pos): return False
+        if (q, r) in self.walls: return False
+        if (q, r) not in self.cells:
+            self.over = True
+            self.winner = &#34;MOUSE&#34;
+            return True
+        self.pos = (q, r)
+        return True
+
+    def check_game_state_after_block(self):
+        if not self.has_valid_moves():
+            self.over = True
+            self.winner = &#34;BLOCKER&#34;
+
+    def ai_move_mouse(self):
+        &#34;&#34;&#34;Execute AI-controlled mouse move based on difficulty level.&#34;&#34;&#34;
+        neighbors = self.get_neighbors(*self.pos)
+        valid_moves = [n for n in neighbors if n not in self.walls]
+        if not valid_moves:
+            self.over = True
+            self.winner = &#34;BLOCKER&#34;
+            return
+        
+        move = None
+        if self.difficulty == &#34;EASY&#34;:
+            move = random.choice(valid_moves)
+        elif self.difficulty == &#34;MEDIUM&#34;:
+            move = ai_logic.get_shortest_path(self, self.pos)
+            if not move or move not in valid_moves:
+                move = random.choice(valid_moves)
+
+        elif self.difficulty == &#34;HARD&#34;:
+             move = ai_logic.best_move_mouse(self, self.pos, self.walls)
+             if not move or move not in valid_moves:
+                 move = random.choice(valid_moves)
+
+        if move not in self.cells:
+            self.over = True
+            self.winner = &#34;MOUSE&#34;
+            return
+
+        self.pos = move
+        self.turn = 0
+        self.check_game_state_after_block()
+
+    def ai_move_blocker(self):
+        &#34;&#34;&#34;Execute AI-controlled blocker move to place an optimal wall.&#34;&#34;&#34;
+        self.save_state()
+        if self.over: return
+        target_wall = None
+        
+        if self.difficulty == &#34;EASY&#34;:
+            opts = [c for c in self.cells if c not in self.walls and c != self.pos]
+            if opts: 
+                target_wall = random.choice(opts)
+        elif self.difficulty == &#34;MEDIUM&#34;:
+            move = ai_logic.get_shortest_path(self, self.pos)
+            if move and move not in self.walls and move != self.pos:
+                target_wall = move
+            else:
+                opts = [c for c in self.cells if c not in self.walls and c != self.pos]
+                if opts: 
+                    target_wall = random.choice(opts)
+        elif self.difficulty == &#34;HARD&#34;:
+            target_wall = ai_logic.best_wall(self, self.pos, self.walls)
+
+        if target_wall:
+            self.walls.add(target_wall)
+            self.turn = 1
+            self.check_game_state_after_block()
+
+    def reset(self):
+        &#34;&#34;&#34;Reset game to initial state with same configuration.&#34;&#34;&#34;
+        self.over = False
+        self.winner = None
+        self.turn = 0
+        self.history.clear()
+        self.redo_stack.clear()
+        self.walls.clear()
+        self.current_filename = None
+        self.make_grid()
+        self.add_walls(self.initial_obs)
+        if self.mode == &#34;AI&#34; and self.player_role == &#34;MOUSE&#34;:
+            self.ai_move_blocker()</code></pre>
+</details>
+<div class="desc"><p>Represents a Trap the Mouse game instance.</p>
+<p>This class manages the hexagonal grid, mouse and wall positions,
+turn-based gameplay, AI opponents, undo/redo functionality, and
+persistent storage of game states.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>w</code></strong></dt>
+<dd>Grid width in hexagons.</dd>
+<dt><strong><code>h</code></strong></dt>
+<dd>Grid height in hexagons.</dd>
+<dt><strong><code>mode</code></strong></dt>
+<dd>Game mode ("AI" or "PVP").</dd>
+<dt><strong><code>difficulty</code></strong></dt>
+<dd>AI difficulty level ("EASY", "MEDIUM", "HARD").</dd>
+<dt><strong><code>player_role</code></strong></dt>
+<dd>Player's role ("BLOCKER" or "MOUSE").</dd>
+<dt><strong><code>cells</code></strong></dt>
+<dd>Set of all grid cell coordinates.</dd>
+<dt><strong><code>walls</code></strong></dt>
+<dd>Set of wall/blocked cell coordinates.</dd>
+<dt><strong><code>pos</code></strong></dt>
+<dd>Current mouse position as (q, r) tuple.</dd>
+<dt><strong><code>over</code></strong></dt>
+<dd>Boolean indicating if game has ended.</dd>
+<dt><strong><code>winner</code></strong></dt>
+<dd>Winning side ("BLOCKER" or "MOUSE"), None if ongoing.</dd>
+<dt><strong><code>turn</code></strong></dt>
+<dd>Current turn (0 = blocker, 1 = mouse).</dd>
+<dt><strong><code>history</code></strong></dt>
+<dd>List of previous game states for undo.</dd>
+<dt><strong><code>redo_stack</code></strong></dt>
+<dd>Stack of undone states for redo.</dd>
+<dt><strong><code>current_filename</code></strong></dt>
+<dd>Name of save file if game was loaded.</dd>
+</dl>
+<p>Initialize a new game instance.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mode</code></strong></dt>
+<dd>Game mode, "AI" or "PVP" (default "AI").</dd>
+<dt><strong><code>difficulty</code></strong></dt>
+<dd>AI difficulty, "EASY"/"MEDIUM"/"HARD" (default "MEDIUM").</dd>
+<dt><strong><code>player_role</code></strong></dt>
+<dd>Player's role, "BLOCKER" or "MOUSE" (default "BLOCKER").</dd>
+<dt><strong><code>w</code></strong></dt>
+<dd>Grid width (default 11).</dd>
+<dt><strong><code>h</code></strong></dt>
+<dd>Grid height (default 11).</dd>
+<dt><strong><code>n_obs</code></strong></dt>
+<dd>Number of initial random obstacles (default 10).</dd>
+</dl></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="Proiect-Python.game.Game.load_from_file"><code class="name flex">
+<span>def <span class="ident">load_from_file</span></span>(<span>filename)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load_from_file(filename):
+    &#34;&#34;&#34;Load a game instance from a save file.
+    
+    Args:
+        filename: Name of save file to load.
+    
+    Returns:
+        Game instance if successful, None otherwise.
+    &#34;&#34;&#34;
+    try:
+        folder = &#34;saves&#34;
+        full_path = os.path.join(folder, filename)
+        if not os.path.exists(full_path):
+            return None
+            
+        with open(full_path, &#34;rb&#34;) as f:
+            game_obj = pickle.load(f)
+            game_obj.current_filename = filename
+            return game_obj
+    except:
+        return None</code></pre>
+</details>
+<div class="desc"><p>Load a game instance from a save file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filename</code></strong></dt>
+<dd>Name of save file to load.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Game instance if successful, None otherwise.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="Proiect-Python.game.Game.add_walls"><code class="name flex">
+<span>def <span class="ident">add_walls</span></span>(<span>self, n)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_walls(self, n):
+    opts = list(self.cells)
+    if self.pos in opts:
+        opts.remove(self.pos)
+    current_walls = self.walls.copy()
+    potential = [c for c in opts if c not in current_walls]
+    if len(potential) &lt; n: 
+        n = len(potential)
+    self.walls.update(set(random.sample(potential, n)))</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="Proiect-Python.game.Game.ai_move_blocker"><code class="name flex">
+<span>def <span class="ident">ai_move_blocker</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ai_move_blocker(self):
+    &#34;&#34;&#34;Execute AI-controlled blocker move to place an optimal wall.&#34;&#34;&#34;
+    self.save_state()
+    if self.over: return
+    target_wall = None
+    
+    if self.difficulty == &#34;EASY&#34;:
+        opts = [c for c in self.cells if c not in self.walls and c != self.pos]
+        if opts: 
+            target_wall = random.choice(opts)
+    elif self.difficulty == &#34;MEDIUM&#34;:
+        move = ai_logic.get_shortest_path(self, self.pos)
+        if move and move not in self.walls and move != self.pos:
+            target_wall = move
+        else:
+            opts = [c for c in self.cells if c not in self.walls and c != self.pos]
+            if opts: 
+                target_wall = random.choice(opts)
+    elif self.difficulty == &#34;HARD&#34;:
+        target_wall = ai_logic.best_wall(self, self.pos, self.walls)
+
+    if target_wall:
+        self.walls.add(target_wall)
+        self.turn = 1
+        self.check_game_state_after_block()</code></pre>
+</details>
+<div class="desc"><p>Execute AI-controlled blocker move to place an optimal wall.</p></div>
+</dd>
+<dt id="Proiect-Python.game.Game.ai_move_mouse"><code class="name flex">
+<span>def <span class="ident">ai_move_mouse</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ai_move_mouse(self):
+    &#34;&#34;&#34;Execute AI-controlled mouse move based on difficulty level.&#34;&#34;&#34;
+    neighbors = self.get_neighbors(*self.pos)
+    valid_moves = [n for n in neighbors if n not in self.walls]
+    if not valid_moves:
+        self.over = True
+        self.winner = &#34;BLOCKER&#34;
+        return
+    
+    move = None
+    if self.difficulty == &#34;EASY&#34;:
+        move = random.choice(valid_moves)
+    elif self.difficulty == &#34;MEDIUM&#34;:
+        move = ai_logic.get_shortest_path(self, self.pos)
+        if not move or move not in valid_moves:
+            move = random.choice(valid_moves)
+
+    elif self.difficulty == &#34;HARD&#34;:
+         move = ai_logic.best_move_mouse(self, self.pos, self.walls)
+         if not move or move not in valid_moves:
+             move = random.choice(valid_moves)
+
+    if move not in self.cells:
+        self.over = True
+        self.winner = &#34;MOUSE&#34;
+        return
+
+    self.pos = move
+    self.turn = 0
+    self.check_game_state_after_block()</code></pre>
+</details>
+<div class="desc"><p>Execute AI-controlled mouse move based on difficulty level.</p></div>
+</dd>
+<dt id="Proiect-Python.game.Game.check_game_state_after_block"><code class="name flex">
+<span>def <span class="ident">check_game_state_after_block</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_game_state_after_block(self):
+    if not self.has_valid_moves():
+        self.over = True
+        self.winner = &#34;BLOCKER&#34;</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="Proiect-Python.game.Game.click_tile"><code class="name flex">
+<span>def <span class="ident">click_tile</span></span>(<span>self, q, r)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def click_tile(self, q, r):
+    &#34;&#34;&#34;Handle mouse click on a hex tile.
+    
+    Args:
+        q: Hexagon q coordinate.
+        r: Hexagon r coordinate.
+    &#34;&#34;&#34;
+    if self.over: return
+
+    self.save_state()
+
+    if self.player_role == &#34;BLOCKER&#34; or self.mode == &#34;PVP&#34;:
+        if self.turn == 0:
+            if (q, r) == self.pos or (q, r) in self.walls or (q, r) not in self.cells:
+                self.undo()
+                return
+            self.walls.add((q, r))
+            self.check_game_state_after_block()
+            
+            if not self.over:
+                self.turn = 1
+                if self.mode == &#34;AI&#34;:
+                    self.ai_move_mouse()
+        
+        elif self.turn == 1 and self.mode == &#34;PVP&#34;:
+            moved = self.human_move_mouse(q, r)
+            if moved: 
+                self.turn = 0
+            else: 
+                self.undo()
+
+    elif self.player_role == &#34;MOUSE&#34; and self.mode == &#34;AI&#34;:
+        if self.turn == 1:
+            moved = self.human_move_mouse(q, r)
+            if moved and not self.over:
+                self.turn = 0
+                self.ai_move_blocker()
+            elif not moved:
+                self.undo()</code></pre>
+</details>
+<div class="desc"><p>Handle mouse click on a hex tile.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>q</code></strong></dt>
+<dd>Hexagon q coordinate.</dd>
+<dt><strong><code>r</code></strong></dt>
+<dd>Hexagon r coordinate.</dd>
+</dl></div>
+</dd>
+<dt id="Proiect-Python.game.Game.final_hex"><code class="name flex">
+<span>def <span class="ident">final_hex</span></span>(<span>self, cell)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def final_hex(self, cell):
+    if cell not in self.cells: 
+        return False
+    neighbors = self.get_neighbors(*cell)
+    for n in neighbors:
+        if n not in self.cells:
+            return True
+    return False</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="Proiect-Python.game.Game.get_neighbors"><code class="name flex">
+<span>def <span class="ident">get_neighbors</span></span>(<span>self, q, r)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_neighbors(self, q, r):
+    dirs = [(1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1), (0, 1)]
+    return [(q + dq, r + dr) for dq, dr in dirs]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="Proiect-Python.game.Game.has_valid_moves"><code class="name flex">
+<span>def <span class="ident">has_valid_moves</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def has_valid_moves(self):
+    for n in self.get_neighbors(*self.pos):
+        if n not in self.cells:
+            return True
+        if n in self.cells and n not in self.walls:
+            return True
+    return False</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="Proiect-Python.game.Game.human_move_mouse"><code class="name flex">
+<span>def <span class="ident">human_move_mouse</span></span>(<span>self, q, r)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def human_move_mouse(self, q, r):
+    if (q, r) not in self.get_neighbors(*self.pos): return False
+    if (q, r) in self.walls: return False
+    if (q, r) not in self.cells:
+        self.over = True
+        self.winner = &#34;MOUSE&#34;
+        return True
+    self.pos = (q, r)
+    return True</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="Proiect-Python.game.Game.make_grid"><code class="name flex">
+<span>def <span class="ident">make_grid</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_grid(self):
+    &#34;&#34;&#34;Generate hexagonal grid cells and initialize mouse position.&#34;&#34;&#34;
+    self.cells.clear()
+    for r in range(self.h):
+        for c in range(self.w):
+            q = c - (r // 2)
+            self.cells.add((q, r))
+    
+    cr = self.h // 2
+    cc = self.w // 2
+    self.pos = (cc - (cr // 2), cr)</code></pre>
+</details>
+<div class="desc"><p>Generate hexagonal grid cells and initialize mouse position.</p></div>
+</dd>
+<dt id="Proiect-Python.game.Game.redo"><code class="name flex">
+<span>def <span class="ident">redo</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def redo(self):
+    &#34;&#34;&#34;Redo a previously undone move.&#34;&#34;&#34;
+    if not self.redo_stack: return
+
+    current_state = {
+        &#39;walls&#39;: self.walls.copy(),
+        &#39;pos&#39;: self.pos,
+        &#39;turn&#39;: self.turn,
+        &#39;over&#39;: self.over,
+        &#39;winner&#39;: self.winner
+    }
+    self.history.append(current_state)
+
+    next_st = self.redo_stack.pop()
+    self.walls = next_st[&#39;walls&#39;]
+    self.pos = next_st[&#39;pos&#39;]
+    self.turn = next_st[&#39;turn&#39;]
+    self.over = next_st[&#39;over&#39;]
+    self.winner = next_st[&#39;winner&#39;]</code></pre>
+</details>
+<div class="desc"><p>Redo a previously undone move.</p></div>
+</dd>
+<dt id="Proiect-Python.game.Game.reset"><code class="name flex">
+<span>def <span class="ident">reset</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reset(self):
+    &#34;&#34;&#34;Reset game to initial state with same configuration.&#34;&#34;&#34;
+    self.over = False
+    self.winner = None
+    self.turn = 0
+    self.history.clear()
+    self.redo_stack.clear()
+    self.walls.clear()
+    self.current_filename = None
+    self.make_grid()
+    self.add_walls(self.initial_obs)
+    if self.mode == &#34;AI&#34; and self.player_role == &#34;MOUSE&#34;:
+        self.ai_move_blocker()</code></pre>
+</details>
+<div class="desc"><p>Reset game to initial state with same configuration.</p></div>
+</dd>
+<dt id="Proiect-Python.game.Game.save_state"><code class="name flex">
+<span>def <span class="ident">save_state</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_state(self):
+    &#34;&#34;&#34;Save current game state to history for undo functionality.&#34;&#34;&#34;
+    state = {
+        &#39;walls&#39;: self.walls.copy(),
+        &#39;pos&#39;: self.pos,
+        &#39;turn&#39;: self.turn,
+        &#39;over&#39;: self.over,
+        &#39;winner&#39;: self.winner
+    }
+    self.history.append(state)
+    self.redo_stack.clear() </code></pre>
+</details>
+<div class="desc"><p>Save current game state to history for undo functionality.</p></div>
+</dd>
+<dt id="Proiect-Python.game.Game.save_to_file"><code class="name flex">
+<span>def <span class="ident">save_to_file</span></span>(<span>self, filename)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_to_file(self, filename):
+    &#34;&#34;&#34;Save game state to a file using pickle.
+    
+    Args:
+        filename: Name of save file.
+    
+    Returns:
+        True if save succeeded, False otherwise.
+    &#34;&#34;&#34;
+    try:
+        folder = &#34;saves&#34;
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+        full_path = os.path.join(folder, filename)
+        
+        with open(full_path, &#34;wb&#34;) as f:
+            pickle.dump(self, f)
+        
+        self.current_filename = filename
+        return True
+    except:
+        return False</code></pre>
+</details>
+<div class="desc"><p>Save game state to a file using pickle.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filename</code></strong></dt>
+<dd>Name of save file.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>True if save succeeded, False otherwise.</p></div>
+</dd>
+<dt id="Proiect-Python.game.Game.undo"><code class="name flex">
+<span>def <span class="ident">undo</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def undo(self):
+    &#34;&#34;&#34;Undo the last move, restoring previous game state.&#34;&#34;&#34;
+    if not self.history: return
+    
+    current_state = {
+        &#39;walls&#39;: self.walls.copy(),
+        &#39;pos&#39;: self.pos,
+        &#39;turn&#39;: self.turn,
+        &#39;over&#39;: self.over,
+        &#39;winner&#39;: self.winner
+    }
+    self.redo_stack.append(current_state)
+
+    prev = self.history.pop()
+    self.walls = prev[&#39;walls&#39;]
+    self.pos = prev[&#39;pos&#39;]
+    self.turn = prev[&#39;turn&#39;]
+    self.over = prev[&#39;over&#39;]
+    self.winner = prev[&#39;winner&#39;]</code></pre>
+</details>
+<div class="desc"><p>Undo the last move, restoring previous game state.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="Proiect-Python" href="index.html">Proiect-Python</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="Proiect-Python.game.Game" href="#Proiect-Python.game.Game">Game</a></code></h4>
+<ul class="">
+<li><code><a title="Proiect-Python.game.Game.add_walls" href="#Proiect-Python.game.Game.add_walls">add_walls</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.ai_move_blocker" href="#Proiect-Python.game.Game.ai_move_blocker">ai_move_blocker</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.ai_move_mouse" href="#Proiect-Python.game.Game.ai_move_mouse">ai_move_mouse</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.check_game_state_after_block" href="#Proiect-Python.game.Game.check_game_state_after_block">check_game_state_after_block</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.click_tile" href="#Proiect-Python.game.Game.click_tile">click_tile</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.final_hex" href="#Proiect-Python.game.Game.final_hex">final_hex</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.get_neighbors" href="#Proiect-Python.game.Game.get_neighbors">get_neighbors</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.has_valid_moves" href="#Proiect-Python.game.Game.has_valid_moves">has_valid_moves</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.human_move_mouse" href="#Proiect-Python.game.Game.human_move_mouse">human_move_mouse</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.load_from_file" href="#Proiect-Python.game.Game.load_from_file">load_from_file</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.make_grid" href="#Proiect-Python.game.Game.make_grid">make_grid</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.redo" href="#Proiect-Python.game.Game.redo">redo</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.reset" href="#Proiect-Python.game.Game.reset">reset</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.save_state" href="#Proiect-Python.game.Game.save_state">save_state</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.save_to_file" href="#Proiect-Python.game.Game.save_to_file">save_to_file</a></code></li>
+<li><code><a title="Proiect-Python.game.Game.undo" href="#Proiect-Python.game.Game.undo">undo</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

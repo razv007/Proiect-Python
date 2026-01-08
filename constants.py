@@ -1,3 +1,9 @@
+"""Game constants and configuration values.
+
+This module contains all constant values used throughout the Trap the Mouse
+game, including screen dimensions, colors, button colors, and game-specific
+colors.
+"""
 
 # Screen dimensions
 SCREEN_W = 900
@@ -27,5 +33,4 @@ COLOR_TURN_INDICATOR = (100, 255, 100)
 COLOR_MSG_SUCCESS = (100, 255, 100) 
 COLOR_MSG_ERROR = (255, 100, 100)
 COLOR_MSG_INFO = (255, 255, 0)
-
 

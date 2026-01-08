@@ -1,3 +1,9 @@
+"""Main game loop and UI rendering for Trap the Mouse.
+
+This module contains the main entry point for the game, handling Pygame
+initialization, event processing, state management, menu navigation, and
+all rendering logic for the game interface.
+"""
 import pygame
 import math
 import os

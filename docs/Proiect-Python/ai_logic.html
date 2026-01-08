@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>Proiect-Python.ai_logic API documentation</title>
+<meta name="description" content="AI logic and decision-making algorithms for the Trap the Mouse game …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>Proiect-Python.ai_logic</code></h1>
+</header>
+<section id="section-intro">
+<p>AI logic and decision-making algorithms for the Trap the Mouse game.</p>
+<p>This module implements sophisticated AI algorithms including breadth-first
+search, Dinic's maximum flow algorithm, and various heuristics for optimal
+move selection in both blocker and mouse roles.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="Proiect-Python.ai_logic.best_move_mouse"><code class="name flex">
+<span>def <span class="ident">best_move_mouse</span></span>(<span>game, mouse_pos, blocked)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def best_move_mouse(game, mouse_pos, blocked):
+    &#34;&#34;&#34;Determine the best move for the mouse using advanced heuristics.
+    
+    Args:
+        game: Game instance.
+        mouse_pos: Current mouse position (q, r).
+        blocked: Set of blocked cells.
+    
+    Returns:
+        Best move cell coordinates (q, r), or None if no valid moves.
+    &#34;&#34;&#34;
+    neighbors = game.get_neighbors(*mouse_pos)
+    valid_moves = []
+    
+    for n in neighbors:
+        if n not in game.cells:
+            return n
+        if n not in blocked:
+            valid_moves.append(n)
+    
+    if not valid_moves:
+        return None
+        
+    win_hexes = winning_hex(game, blocked)
+    best_move = None
+    best_score = -10**9
+    
+    for move in valid_moves:
+        if game.final_hex(move):
+            return move
+            
+        score = score_mouse(game, move, blocked, win_hexes)
+        score += random.uniform(0, 0.1)
+        
+        if score &gt; best_score:
+            best_score = score
+            best_move = move
+    return best_move if best_move else random.choice(valid_moves)</code></pre>
+</details>
+<div class="desc"><p>Determine the best move for the mouse using advanced heuristics.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>game</code></strong></dt>
+<dd>Game instance.</dd>
+<dt><strong><code>mouse_pos</code></strong></dt>
+<dd>Current mouse position (q, r).</dd>
+<dt><strong><code>blocked</code></strong></dt>
+<dd>Set of blocked cells.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Best move cell coordinates (q, r), or None if no valid moves.</p></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.best_wall"><code class="name flex">
+<span>def <span class="ident">best_wall</span></span>(<span>game, mouse_pos, blocked)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def best_wall(game, mouse_pos, blocked):
+    &#34;&#34;&#34;Determine the optimal wall placement to block the mouse.
+    
+    Uses a combination of path probability analysis and max-flow cut
+    calculations to find the wall position that maximally disrupts
+    the mouse&#39;s escape routes.
+    
+    Args:
+        game: Game instance.
+        mouse_pos: Current mouse position tuple (q, r).
+        blocked: Set of currently blocked cells.
+    
+    Returns:
+        Cell coordinates (q, r) for optimal wall placement, or None.
+    &#34;&#34;&#34;
+    dist = bfs_dist(game, mouse_pos, blocked)
+    if not dist: 
+        opts = [c for c in game.cells if c not in blocked and c != mouse_pos]
+        return random.choice(opts) if opts else None
+
+    IN, OUT, total = dp_IN_OUT(game, dist, blocked, mouse_pos)
+    
+    if total == 0:
+        opts = [c for c in game.cells if c not in blocked and c != mouse_pos]
+        return random.choice(opts) if opts else None
+
+    candidates = []
+    
+    gamma = 0.4      
+    w1 = 0.5          
+    w2 = 0.5          
+    
+    level_sums = collections.defaultdict(int)
+    for u in dist:
+        if u == mouse_pos or u in blocked: continue
+        if IN[u] &gt; 0 and OUT[u] &gt; 0:
+            aux = IN[u] * OUT[u]
+            d = dist[u]
+            level_sums[d] += aux
+
+    for u in dist:
+        if u == mouse_pos or u in blocked: continue
+        if IN[u] == 0 or OUT[u] == 0: continue
+        
+        aux = IN[u] * OUT[u]
+        share = aux / total
+        
+        d = dist[u]
+        level_total = level_sums[d]
+        level_norm = (aux / level_total) if level_total &gt; 0 else 0
+        
+        lead = max(0, d - 1)
+        w_time = math.exp(gamma * lead)
+        
+        base_score = w_time * (w1 * share + w2 * level_norm)
+        candidates.append((u, base_score))
+
+    if not candidates:
+            opts = [c for c in game.cells if c not in blocked and c != mouse_pos]
+            return random.choice(opts) if opts else None
+
+    candidates.sort(key=lambda x: x[1], reverse=True)
+    top_k = candidates[:15]
+    
+    base_graph, S, T = build_dinic(game, mouse_pos, blocked)
+    if not base_graph: 
+        return top_k[0][0]
+    
+    base_cut = dinic(S, T, base_graph)
+    
+    best_hex = None
+    max_score = -10**9
+    alpha_cut = 3.0
+    
+    nodes_in_flow = set()
+    for u in dist:
+        if u == mouse_pos: 
+            continue
+        u_in = f&#34;{u}_in&#34;
+        if u_in in base_graph:
+            for v, cap, rev in base_graph[u_in]:
+                if v == f&#34;{u}_out&#34; and cap == 0:
+                    nodes_in_flow.add(u)
+                    break
+
+    for u, base_val in top_k:
+        marginal_cut = 0
+        
+        if u not in nodes_in_flow:
+            marginal_cut = 0
+        else:
+            temp_blocked = blocked.copy()
+            temp_blocked.add(u)
+            
+            temp_graph, tS, tT = build_dinic(game, mouse_pos,temp_blocked)
+            if temp_graph:
+                new_cut = dinic(tS, tT, temp_graph)
+                marginal_cut = max(0, base_cut - new_cut)
+        
+        score = base_val + (alpha_cut * marginal_cut)
+        
+        if score &gt; max_score:
+            max_score = score
+            best_hex = u
+
+    return best_hex if best_hex else top_k[0][0]</code></pre>
+</details>
+<div class="desc"><p>Determine the optimal wall placement to block the mouse.</p>
+<p>Uses a combination of path probability analysis and max-flow cut
+calculations to find the wall position that maximally disrupts
+the mouse's escape routes.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>game</code></strong></dt>
+<dd>Game instance.</dd>
+<dt><strong><code>mouse_pos</code></strong></dt>
+<dd>Current mouse position tuple (q, r).</dd>
+<dt><strong><code>blocked</code></strong></dt>
+<dd>Set of currently blocked cells.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Cell coordinates (q, r) for optimal wall placement, or None.</p></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.bfs_dist"><code class="name flex">
+<span>def <span class="ident">bfs_dist</span></span>(<span>game, start, blocked)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bfs_dist(game, start, blocked):
+    &#34;&#34;&#34;Calculate distances from start to all reachable cells using BFS.
+    
+    Args:
+        game: Game instance containing grid and neighbor information.
+        start: Starting cell tuple (q, r).
+        blocked: Set of blocked/wall cells.
+    
+    Returns:
+        Dictionary mapping cell coordinates to their distance from start.
+    &#34;&#34;&#34;
+    queue = collections.deque([(start, 0)])
+    viz = {start: 0}
+    while queue:
+        nod, dist = queue.popleft()
+        for n in game.get_neighbors(*nod):
+            if n in game.cells and n not in blocked and n not in viz:
+                viz[n] = dist + 1
+                queue.append((n, dist + 1))
+    return viz</code></pre>
+</details>
+<div class="desc"><p>Calculate distances from start to all reachable cells using BFS.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>game</code></strong></dt>
+<dd>Game instance containing grid and neighbor information.</dd>
+<dt><strong><code>start</code></strong></dt>
+<dd>Starting cell tuple (q, r).</dd>
+<dt><strong><code>blocked</code></strong></dt>
+<dd>Set of blocked/wall cells.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary mapping cell coordinates to their distance from start.</p></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.build_dinic"><code class="name flex">
+<span>def <span class="ident">build_dinic</span></span>(<span>game, start, blocked)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_dinic(game, start, blocked):
+    &#34;&#34;&#34;Build a flow network graph for Dinic&#39;s algorithm.
+    
+    Args:
+        game: Game instance.
+        start: Starting cell for the mouse.
+        blocked: Set of blocked/wall cells.
+    
+    Returns:
+        Tuple of (graph, source_node, target_node) or (None, None, None).
+    &#34;&#34;&#34;
+    dist = bfs_dist(game, start, blocked)
+    edge_nodes = [n for n in dist if game.final_hex(n)]
+    
+    if not edge_nodes: 
+        return None, None, None
+    
+    min_dist = min(dist[n] for n in edge_nodes)
+    
+    graph = collections.defaultdict(list)
+    S = &#34;S&#34;
+    T = &#34;T&#34;
+    INF = 10**9
+
+    def add_edge(u, v, cap):
+        graph[u].append([v, cap, len(graph[v])])
+        graph[v].append([u, 0, len(graph[u]) - 1])
+
+    add_edge(S, f&#34;{start}_in&#34;, INF)
+
+    for u in dist:
+        cap_node = INF if u == start else 1
+        add_edge(f&#34;{u}_in&#34;, f&#34;{u}_out&#34;, cap_node)
+        
+        if game.final_hex(u) and dist[u] == min_dist:
+            add_edge(f&#34;{u}_out&#34;, T, INF)
+        
+        d_u = dist[u]
+        for v in game.get_neighbors(*u):
+            if v in dist and v not in blocked and dist[v] == d_u + 1:
+                add_edge(f&#34;{u}_out&#34;, f&#34;{v}_in&#34;, INF)
+                
+    return graph, S, T</code></pre>
+</details>
+<div class="desc"><p>Build a flow network graph for Dinic's algorithm.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>game</code></strong></dt>
+<dd>Game instance.</dd>
+<dt><strong><code>start</code></strong></dt>
+<dd>Starting cell for the mouse.</dd>
+<dt><strong><code>blocked</code></strong></dt>
+<dd>Set of blocked/wall cells.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tuple of (graph, source_node, target_node) or (None, None, None).</p></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.dinic"><code class="name flex">
+<span>def <span class="ident">dinic</span></span>(<span>S, T, graph)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dinic(S, T, graph):
+    max_flow = 0
+    level = {}
+    while dinic_bfs(S, T, graph, level):
+        ptr = collections.defaultdict(int)
+        while True:
+            pushed = dinic_dfs(S, T, 10**9, graph, level, ptr)
+            if pushed == 0: break
+            max_flow += pushed
+    return max_flow</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.dinic_bfs"><code class="name flex">
+<span>def <span class="ident">dinic_bfs</span></span>(<span>s, t, graph, level)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dinic_bfs(s, t, graph, level):
+    &#34;&#34;&#34;Perform BFS for Dinic&#39;s algorithm to build level graph.
+    
+    Args:
+        s: Source node.
+        t: Target (sink) node.
+        graph: Flow network graph.
+        level: Dictionary to store node levels (modified in-place).
+    
+    Returns:
+        True if target is reachable from source, False otherwise.
+    &#34;&#34;&#34;
+    level.clear()
+    level[s] = 0
+    queue = collections.deque([s])
+    
+    while queue:
+        u = queue.popleft()
+        for v, cap, rev in graph[u]:
+            if cap &gt; 0 and v not in level:
+                level[v] = level[u] + 1
+                queue.append(v)
+    
+    return t in level</code></pre>
+</details>
+<div class="desc"><p>Perform BFS for Dinic's algorithm to build level graph.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>s</code></strong></dt>
+<dd>Source node.</dd>
+<dt><strong><code>t</code></strong></dt>
+<dd>Target (sink) node.</dd>
+<dt><strong><code>graph</code></strong></dt>
+<dd>Flow network graph.</dd>
+<dt><strong><code>level</code></strong></dt>
+<dd>Dictionary to store node levels (modified in-place).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>True if target is reachable from source, False otherwise.</p></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.dinic_dfs"><code class="name flex">
+<span>def <span class="ident">dinic_dfs</span></span>(<span>u, t, flow, graph, level, ptr)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dinic_dfs(u, t, flow, graph, level, ptr):
+    if flow == 0 or u == t:
+        return flow
+    
+    for i in range(ptr[u], len(graph[u])):
+        ptr[u] = i 
+        v, cap, rev = graph[u][i]
+        
+        if cap &gt; 0 and v in level and level[v] == level[u] + 1:
+            pushed = dinic_dfs(v, t, min(flow, cap), graph, level, ptr)
+            if pushed &gt; 0:
+                graph[u][i][1] -= pushed
+                graph[v][rev][1] += pushed
+                return pushed
+    
+    return 0</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.dp_IN_OUT"><code class="name flex">
+<span>def <span class="ident">dp_IN_OUT</span></span>(<span>game, dist, blocked, start)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dp_IN_OUT(game, dist, blocked, start):
+    &#34;&#34;&#34;Calculate incoming and outgoing path counts using dynamic programming.
+    
+    Args:
+        game: Game instance.
+        dist: Dictionary of distances from start to cells.
+        blocked: Set of blocked cells.
+        start: Starting cell.
+    
+    Returns:
+        Tuple of (IN, OUT, total) where IN/OUT are dicts of path counts.
+    &#34;&#34;&#34;
+    edge_nodes = [n for n in dist if game.final_hex(n)]
+    if not edge_nodes: return {}, {}, 0
+
+    min_dist = min(dist[n] for n in edge_nodes)
+    exits = [n for n in edge_nodes if dist[n] == min_dist]
+
+    IN = collections.defaultdict(int)
+    OUT = collections.defaultdict(int)
+
+    nods = sorted(dist.keys(), key=lambda x: dist[x])
+    IN[start] = 1
+
+    for u in nods:
+        if IN[u] == 0: continue
+        d_u = dist[u]
+        for v in game.get_neighbors(*u):
+            if v in dist and v not in blocked and dist[v] == d_u + 1:
+                IN[v] += IN[u]
+
+    for ex in exits:
+        OUT[ex] = 1 
+
+    nods = sorted(dist.keys(), key=lambda x: -dist[x])
+    for u in nods:
+        if OUT[u] == 0 and u not in exits: continue
+        d_u = dist[u]
+        for v in game.get_neighbors(*u):
+            if v in dist and v not in blocked and dist[v] == d_u - 1:
+                OUT[v] += OUT[u]
+
+    total = OUT[start]
+    return IN, OUT, total</code></pre>
+</details>
+<div class="desc"><p>Calculate incoming and outgoing path counts using dynamic programming.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>game</code></strong></dt>
+<dd>Game instance.</dd>
+<dt><strong><code>dist</code></strong></dt>
+<dd>Dictionary of distances from start to cells.</dd>
+<dt><strong><code>blocked</code></strong></dt>
+<dd>Set of blocked cells.</dd>
+<dt><strong><code>start</code></strong></dt>
+<dd>Starting cell.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tuple of (IN, OUT, total) where IN/OUT are dicts of path counts.</p></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.get_shortest_path"><code class="name flex">
+<span>def <span class="ident">get_shortest_path</span></span>(<span>game, start_pos)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_shortest_path(game, start_pos):
+    &#34;&#34;&#34;Find the first move on the shortest path to the grid edge.
+    
+    Args:
+        game: Game instance.
+        start_pos: Starting position (q, r).
+    
+    Returns:
+        Next move coordinates (q, r) towards nearest edge, or None.
+    &#34;&#34;&#34;
+    queue = collections.deque([start_pos])
+    prev = {start_pos: None}
+    while queue:
+        u = queue.popleft()
+        if game.final_hex(u):
+            cur = u
+            while prev[cur] != start_pos:
+                cur = prev[cur]
+                if cur is None:
+                    break
+            return cur if cur is not None else u
+        for nb in game.get_neighbors(*u):
+            if nb not in game.cells:
+                if prev.get(u) == start_pos:
+                    return nb
+            if nb not in game.walls and nb not in prev and nb in game.cells:
+                prev[nb] = u
+                queue.append(nb)
+    return None</code></pre>
+</details>
+<div class="desc"><p>Find the first move on the shortest path to the grid edge.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>game</code></strong></dt>
+<dd>Game instance.</dd>
+<dt><strong><code>start_pos</code></strong></dt>
+<dd>Starting position (q, r).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Next move coordinates (q, r) towards nearest edge, or None.</p></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.score_mouse"><code class="name flex">
+<span>def <span class="ident">score_mouse</span></span>(<span>game, move, blocked, win_hexes)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def score_mouse(game, move, blocked, win_hexes):
+    &#34;&#34;&#34;Calculate a score for a potential mouse move.
+    
+    Args:
+        game: Game instance.
+        move: Candidate move cell (q, r).
+        blocked: Set of blocked cells.
+        win_hexes: Dictionary of winning positions.
+    
+    Returns:
+        Numeric score (higher is better, 10^9 for winning moves).
+    &#34;&#34;&#34;
+    if move in win_hexes:
+        return 10**9
+        
+    q = collections.deque([(move, 0)])
+    viz = {move: 0}
+    total = 0.0
+    ok = False
+    while q:
+        curr, dist = q.popleft()
+        
+        if game.final_hex(curr):
+            ok = True
+            weight = 100.0 / math.pow(dist + 1.0, 2)
+            total += weight
+        
+        for n in game.get_neighbors(*curr):
+            if n in game.cells and n not in blocked and n not in viz:
+                viz[n] = dist + 1
+                q.append((n, dist + 1))
+    if not ok:
+        return -10**9
+    return total</code></pre>
+</details>
+<div class="desc"><p>Calculate a score for a potential mouse move.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>game</code></strong></dt>
+<dd>Game instance.</dd>
+<dt><strong><code>move</code></strong></dt>
+<dd>Candidate move cell (q, r).</dd>
+<dt><strong><code>blocked</code></strong></dt>
+<dd>Set of blocked cells.</dd>
+<dt><strong><code>win_hexes</code></strong></dt>
+<dd>Dictionary of winning positions.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Numeric score (higher is better, 10^9 for winning moves).</p></div>
+</dd>
+<dt id="Proiect-Python.ai_logic.winning_hex"><code class="name flex">
+<span>def <span class="ident">winning_hex</span></span>(<span>game, blocked)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def winning_hex(game, blocked):
+    &#34;&#34;&#34;Identify cells that guarantee mouse victory if reached.
+    
+    Args:
+        game: Game instance.
+        blocked: Set of blocked cells.
+    
+    Returns:
+        Dictionary mapping winning cells to their distance from edges.
+    &#34;&#34;&#34;
+    hexes = {}
+    queue = collections.deque()
+    for cell in game.cells:
+        if cell not in blocked and game.final_hex(cell):
+            hexes[cell] = 1
+            queue.append(cell)
+    
+    while queue:
+        u = queue.popleft()
+        for v in game.get_neighbors(*u):
+            if v not in game.cells or v in blocked or v in hexes:
+                continue
+            nod = -1
+            mapp=collections.defaultdict(int)
+            for nb in game.get_neighbors(*v):
+                if nb in hexes:
+                    if(hexes[nb]&lt;=2):
+                        mapp[hexes[nb]] += 1
+                        if(mapp[hexes[nb]]==2):
+                            nod=hexes[nb]
+            if nod!=-1:
+                hexes[v] = nod + 1
+                queue.append(v)
+
+    return hexes</code></pre>
+</details>
+<div class="desc"><p>Identify cells that guarantee mouse victory if reached.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>game</code></strong></dt>
+<dd>Game instance.</dd>
+<dt><strong><code>blocked</code></strong></dt>
+<dd>Set of blocked cells.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary mapping winning cells to their distance from edges.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="Proiect-Python" href="index.html">Proiect-Python</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="Proiect-Python.ai_logic.best_move_mouse" href="#Proiect-Python.ai_logic.best_move_mouse">best_move_mouse</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.best_wall" href="#Proiect-Python.ai_logic.best_wall">best_wall</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.bfs_dist" href="#Proiect-Python.ai_logic.bfs_dist">bfs_dist</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.build_dinic" href="#Proiect-Python.ai_logic.build_dinic">build_dinic</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.dinic" href="#Proiect-Python.ai_logic.dinic">dinic</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.dinic_bfs" href="#Proiect-Python.ai_logic.dinic_bfs">dinic_bfs</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.dinic_dfs" href="#Proiect-Python.ai_logic.dinic_dfs">dinic_dfs</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.dp_IN_OUT" href="#Proiect-Python.ai_logic.dp_IN_OUT">dp_IN_OUT</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.get_shortest_path" href="#Proiect-Python.ai_logic.get_shortest_path">get_shortest_path</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.score_mouse" href="#Proiect-Python.ai_logic.score_mouse">score_mouse</a></code></li>
+<li><code><a title="Proiect-Python.ai_logic.winning_hex" href="#Proiect-Python.ai_logic.winning_hex">winning_hex</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
