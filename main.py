@@ -1,49 +1,14 @@
 import pygame
 import math
 import os
-from datetime import datetime
 from game import Game
-
-def get_hex_size(w, h, screen_w, screen_h):
-    return min(screen_w // (w * 1.8), screen_h // (h * 1.6))
-
-def hex_to_pixel(q, r, sz, cx, cy):
-    x = sz * (math.sqrt(3) * q + math.sqrt(3) / 2 * r)
-    y = sz * (3 / 2 * r)
-    return (int(x + cx), int(y + cy))
-
-def pixel_to_hex(x, y, sz, cx, cy):
-    x, y = x - cx, y - cy
-    q = (math.sqrt(3) / 3 * x - 1 / 3 * y) / sz
-    r = (2 / 3 * y) / sz
-    return axial_round(q, r)
-
-def axial_round(x, y):
-    z = -(x + y)
-    rx, ry, rz = round(x), round(y), round(z)
-    dx, dy, dz = abs(rx - x), abs(ry - y), abs(rz - z)
-    if dx > dy and dx > dz: rx = -(ry + rz)
-    elif dy > dz: ry = -(rx + rz)
-    else: rz = -(rx + ry)
-    return int(rx), int(ry)
-
-def draw_button(screen, rect, text, font, mouse_pos, active=False, bg_color=None):
-    if bg_color:
-        color = bg_color
-    else:
-        base_col = (100, 100, 100) if active else (60, 60, 60)
-        color = (140, 140, 140) if rect.collidepoint(mouse_pos) else base_col
-    
-    pygame.draw.rect(screen, color, rect, border_radius=8)
-    pygame.draw.rect(screen, (200, 200, 200), rect, 2, border_radius=8)
-    txt_surf = font.render(text, True, (255, 255, 255))
-    txt_rect = txt_surf.get_rect(center=rect.center)
-    screen.blit(txt_surf, txt_rect)
-    return rect.collidepoint(mouse_pos)
+import constants as C
+import hex_math
+import ui
 
 if __name__ == "__main__":
     pygame.init()
-    W, H = 900, 700
+    W, H = C.SCREEN_W, C.SCREEN_H
     scr = pygame.display.set_mode((W, H))
     pygame.display.set_caption("TrapTheMouse")
     clock = pygame.time.Clock()
@@ -52,6 +17,7 @@ if __name__ == "__main__":
     if os.path.exists("mouse.png"):
         mouse_img_raw = pygame.image.load("mouse.png")
 
+    # Fonts
     font_title = pygame.font.SysFont("Arial", 50, bold=True)
     font_btn = pygame.font.SysFont("Arial", 28)
     font_small = pygame.font.SysFont("Arial", 18)
@@ -66,25 +32,24 @@ if __name__ == "__main__":
     game = None
     SZ = 25
     CX, CY = W // 2, H // 2
+    scaled_mouse_img = None
 
-    def center_rect_y(y, w=260, h=45):
-        return pygame.Rect(W//2 - w//2, y, w, h)
-
-    btn_vs_ai = center_rect_y(220)
-    btn_vs_pvp = center_rect_y(280)
-    btn_load_menu = center_rect_y(340) 
+    # UI Elements Definition
+    btn_vs_ai = ui.get_centered_rect_y(220, W)
+    btn_vs_pvp = ui.get_centered_rect_y(280, W)
+    btn_load_menu = ui.get_centered_rect_y(340, W) 
     
     btn_sz_11 = pygame.Rect(W//2 - 140, 450, 60, 40)
     btn_sz_13 = pygame.Rect(W//2 - 70, 450, 60, 40)
     btn_sz_15 = pygame.Rect(W//2, 450, 60, 40)
     btn_sz_17 = pygame.Rect(W//2 + 70, 450, 60, 40)
 
-    btn_role_blocker = center_rect_y(250)
-    btn_role_mouse = center_rect_y(310)
+    btn_role_blocker = ui.get_centered_rect_y(250, W)
+    btn_role_mouse = ui.get_centered_rect_y(310, W)
     
-    btn_diff_easy = center_rect_y(220)
-    btn_diff_med = center_rect_y(280)
-    btn_diff_hard = center_rect_y(340)
+    btn_diff_easy = ui.get_centered_rect_y(220, W)
+    btn_diff_med = ui.get_centered_rect_y(280, W)
+    btn_diff_hard = ui.get_centered_rect_y(340, W)
 
     btn_undo = pygame.Rect(30, H - 60, 70, 40)
     btn_redo = pygame.Rect(110, H - 60, 70, 40)
@@ -117,7 +82,7 @@ if __name__ == "__main__":
         
         start_y = 200
         for i, f in enumerate(display_files):
-            rect = center_rect_y(start_y + i * 60)
+            rect = ui.get_centered_rect_y(start_y + i * 60, W)
             del_rect = pygame.Rect(rect.right + 10, rect.y, 40, rect.height)
             
             save_files.append(f)
@@ -126,80 +91,84 @@ if __name__ == "__main__":
 
     run = True
     while run:
-        scr.fill((30, 30, 35))
+        scr.fill(C.COLOR_BG)
         mx, my = pygame.mouse.get_pos()
 
         if state == "MENU_MAIN":
-            title = font_title.render("TrapTheMouse", True, (255, 255, 255))
+            title = font_title.render("TrapTheMouse", True, C.COLOR_WHITE)
             scr.blit(title, title.get_rect(center=(W//2, 120)))
 
-            draw_button(scr, btn_vs_ai, "VS Computer", font_btn, (mx, my))
-            draw_button(scr, btn_vs_pvp, "VS Player (PVP)", font_btn, (mx, my))
-            draw_button(scr, btn_load_menu, "Load Game", font_btn, (mx, my))
+            ui.draw_button(scr, btn_vs_ai, "VS Computer", font_btn, (mx, my))
+            ui.draw_button(scr, btn_vs_pvp, "VS Player (PVP)", font_btn, (mx, my))
+            ui.draw_button(scr, btn_load_menu, "Load Game", font_btn, (mx, my))
 
-            lbl_sz = font_small.render("Board Size:", True, (200, 200, 200))
+            lbl_sz = font_small.render("Board Size:", True, C.COLOR_TEXT_GRAY)
             scr.blit(lbl_sz, (W//2 - 140, 425))
             
-            draw_button(scr, btn_sz_11, "11", font_small, (mx, my), board_size==11)
-            draw_button(scr, btn_sz_13, "13", font_small, (mx, my), board_size==13)
-            draw_button(scr, btn_sz_15, "15", font_small, (mx, my), board_size==15)
-            draw_button(scr, btn_sz_17, "17", font_small, (mx, my), board_size==17)
+            ui.draw_button(scr, btn_sz_11, "11", font_small, (mx, my), board_size==11)
+            ui.draw_button(scr, btn_sz_13, "13", font_small, (mx, my), board_size==13)
+            ui.draw_button(scr, btn_sz_15, "15", font_small, (mx, my), board_size==15)
+            ui.draw_button(scr, btn_sz_17, "17", font_small, (mx, my), board_size==17)
 
         elif state == "MENU_SAVE":
-            title = font_title.render("SAVE GAME AS", True, (255, 255, 255))
+            title = font_title.render("SAVE GAME AS", True, C.COLOR_WHITE)
             scr.blit(title, title.get_rect(center=(W//2, 200)))
            
             input_rect = pygame.Rect(W//2 - 150, 300, 300, 50)
             pygame.draw.rect(scr, (50, 50, 50), input_rect)
-            pygame.draw.rect(scr, (200, 200, 200), input_rect, 2)
+            pygame.draw.rect(scr, C.COLOR_TEXT_GRAY, input_rect, 2)
             
-            txt_surf = font_btn.render(input_text, True, (255, 255, 255))
+            txt_surf = font_btn.render(input_text, True, C.COLOR_WHITE)
             scr.blit(txt_surf, (input_rect.x + 10, input_rect.y + 10))
             
             if save_error_msg:
-                err_surf = font_small.render(save_error_msg, True, (255, 100, 100))
+                err_surf = font_small.render(save_error_msg, True, C.COLOR_MSG_ERROR)
                 scr.blit(err_surf, err_surf.get_rect(center=(W//2, 370)))
 
-            info = font_small.render("Type name and press ENTER", True, (150, 150, 150))
+            info = font_small.render("Type name and press ENTER", True, C.COLOR_TEXT_DARK_GRAY)
             scr.blit(info, info.get_rect(center=(W//2, 500)))
             
-            back_txt = font_small.render("ESC - Cancel", True, (150, 150, 150))
+            back_txt = font_small.render("ESC - Cancel", True, C.COLOR_TEXT_DARK_GRAY)
             scr.blit(back_txt, back_txt.get_rect(center=(W//2, 530)))
 
         elif state == "MENU_LOAD":
-            title = font_title.render("SELECT SAVE", True, (255, 255, 255))
+            title = font_title.render("SELECT SAVE", True, C.COLOR_WHITE)
             scr.blit(title, title.get_rect(center=(W//2, 100)))
             
             if not save_files:
-                info = font_small.render("No save files found.", True, (150, 150, 150))
+                info = font_small.render("No save files found.", True, C.COLOR_TEXT_DARK_GRAY)
                 scr.blit(info, info.get_rect(center=(W//2, 250)))
             
             for i, fname in enumerate(save_files):
-                draw_button(scr, save_file_rects[i], fname[:-4], font_small, (mx, my))
-                draw_button(scr, delete_file_rects[i], "X", font_small, (mx, my), bg_color=(150, 50, 50))
+                ui.draw_button(scr, save_file_rects[i], fname[:-4], font_small, (mx, my))
+                ui.draw_button(scr, delete_file_rects[i], "X", font_small, (mx, my), bg_color=C.COLOR_BTN_DELETE)
 
-            back_txt = font_small.render("ESC - Back", True, (150, 150, 150))
+            back_txt = font_small.render("ESC - Back", True, C.COLOR_TEXT_DARK_GRAY)
             scr.blit(back_txt, back_txt.get_rect(center=(W//2, 600)))
 
         elif state == "MENU_ROLE":
-            title = font_title.render("ALEGE ROLUL", True, (255, 255, 255))
+            title = font_title.render("ALEGE ROLUL", True, C.COLOR_WHITE)
             scr.blit(title, title.get_rect(center=(W//2, 150)))
-            draw_button(scr, btn_role_blocker, "Joc ca ZIDAR", font_btn, (mx, my))
-            draw_button(scr, btn_role_mouse, "Joc ca SOARECE", font_btn, (mx, my))
-            back_txt = font_small.render("ESC - Back", True, (150, 150, 150))
+            ui.draw_button(scr, btn_role_blocker, "Joc ca ZIDAR", font_btn, (mx, my))
+            ui.draw_button(scr, btn_role_mouse, "Joc ca SOARECE", font_btn, (mx, my))
+            back_txt = font_small.render("ESC - Back", True, C.COLOR_TEXT_DARK_GRAY)
             scr.blit(back_txt, back_txt.get_rect(center=(W//2, 500)))
 
         elif state == "MENU_DIFF":
-            title = font_title.render("DIFICULTATE AI", True, (255, 255, 255))
+            title = font_title.render("DIFICULTATE AI", True, C.COLOR_WHITE)
             scr.blit(title, title.get_rect(center=(W//2, 150)))
-            draw_button(scr, btn_diff_easy, "EAZY", font_btn, (mx, my))
-            draw_button(scr, btn_diff_med, "MEDIUM", font_btn, (mx, my))
-            draw_button(scr, btn_diff_hard, "HARD", font_btn, (mx, my))
-            back_txt = font_small.render("ESC - Back", True, (150, 150, 150))
+            ui.draw_button(scr, btn_diff_easy, "EAZY", font_btn, (mx, my))
+            ui.draw_button(scr, btn_diff_med, "MEDIUM", font_btn, (mx, my))
+            ui.draw_button(scr, btn_diff_hard, "HARD", font_btn, (mx, my))
+            back_txt = font_small.render("ESC - Back", True, C.COLOR_TEXT_DARK_GRAY)
             scr.blit(back_txt, back_txt.get_rect(center=(W//2, 500)))
 
         elif state == "GAME":
-            SZ = get_hex_size(game.w, game.h, W, H - 110)
+            if game is None:
+                state = "MENU_MAIN"
+                continue
+            
+            SZ = hex_math.get_hex_size(game.w, game.h, W, H - 110)
             
             if mouse_img_raw:
                 scaled_mouse_img = pygame.transform.scale(mouse_img_raw, (SZ * 1.5, SZ * 1.5))
@@ -208,21 +177,21 @@ if __name__ == "__main__":
                 role_txt = "Zidar" if game.player_role == "BLOCKER" else "Soarece"
                 diff_txt = f"{game.difficulty}" if game.mode == "AI" else "PVP"
                 info = f"{game.mode} | {role_txt} | {diff_txt} | Size: {game.w}x{game.h}"
-                scr.blit(font_small.render(info, True, (200, 200, 200)), (20, 20))
+                scr.blit(font_small.render(info, True, C.COLOR_TEXT_GRAY), (20, 20))
                 
                 turn_label = "Randul tau" if (game.turn == 0 and game.player_role == "BLOCKER") or (game.turn == 1 and game.player_role == "MOUSE") else "Gandeste AI..."
                 if game.mode == "PVP": turn_label = "Zidar" if game.turn == 0 else "Soarece"
-                scr.blit(font_small.render(turn_label, True, (100, 255, 100)), (20, 45))
+                scr.blit(font_small.render(turn_label, True, C.COLOR_TURN_INDICATOR), (20, 45))
 
-            raw_q, raw_r = pixel_to_hex(mx, my, SZ, CX, CY)
+            raw_q, raw_r = hex_math.pixel_to_hex(mx, my, SZ, CX, CY)
             mid_r = game.h // 2
             mid_q = (game.w // 2) - (mid_r // 2)
             hq, hr = raw_q + mid_q, raw_r + mid_r
 
             for q, r in game.cells:
-                color = (200, 200, 200)
-                if (q, r) in game.walls: color = (60, 60, 60)
-                if (q, r) == game.pos:   color = (255, 100, 100)
+                color = C.COLOR_CELL_DEFAULT
+                if (q, r) in game.walls: color = C.COLOR_WALL
+                if (q, r) == game.pos:   color = C.COLOR_MOUSE_POS
                 
                 if (q, r) == (hq, hr) and not game.over:
                     valid = False
@@ -240,30 +209,30 @@ if __name__ == "__main__":
                         else:
                              if game.turn == 1 and is_neighbor and is_not_wall: valid = True
 
-                    color = (100, 255, 100) if valid else (255, 50, 50)
+                    color = C.COLOR_VALID_MOVE if valid else C.COLOR_INVALID_MOVE
 
-                px, py = hex_to_pixel(q - mid_q, r - mid_r, SZ, CX, CY)
+                px, py = hex_math.hex_to_pixel(q - mid_q, r - mid_r, SZ, CX, CY)
                 pts = []
                 for i in range(6):
                     ang = math.radians(60 * i - 30)
                     pts.append((px + SZ * math.cos(ang), py + SZ * math.sin(ang)))
                 pygame.draw.polygon(scr, color, pts)
-                pygame.draw.polygon(scr, (0, 0, 0), pts, 2)
+                pygame.draw.polygon(scr, C.COLOR_BLACK, pts, 2)
 
                 if (q, r) == game.pos and scaled_mouse_img:
                     r_img = scaled_mouse_img.get_rect(center=(px, py))
                     scr.blit(scaled_mouse_img, r_img)
 
-            draw_button(scr, btn_undo, "Undo", font_small, (mx, my))
+            ui.draw_button(scr, btn_undo, "Undo", font_small, (mx, my))
             can_redo = len(game.redo_stack) > 0
             bg_redo = None if can_redo else (40, 40, 40)
-            draw_button(scr, btn_redo, "Redo", font_small, (mx, my), bg_color=bg_redo)
-            draw_button(scr, btn_save, "Save", font_small, (mx, my))
-            draw_button(scr, btn_load_ingame, "Load", font_small, (mx, my))
-            draw_button(scr, btn_menu, "Menu", font_small, (mx, my))
+            ui.draw_button(scr, btn_redo, "Redo", font_small, (mx, my), bg_color=bg_redo)
+            ui.draw_button(scr, btn_save, "Save", font_small, (mx, my))
+            ui.draw_button(scr, btn_load_ingame, "Load", font_small, (mx, my))
+            ui.draw_button(scr, btn_menu, "Menu", font_small, (mx, my))
 
             if msg_timer > 0:
-                msg_surf = font_small.render(msg_text, True, (255, 255, 0))
+                msg_surf = font_small.render(msg_text, True, C.COLOR_MSG_INFO)
                 scr.blit(msg_surf, (350, H - 50))
                 msg_timer -= 1
 
@@ -275,16 +244,17 @@ if __name__ == "__main__":
                 
                 if game.winner == "BLOCKER":
                     wtxt = "ZIDARUL A CASTIGAT!"
-                    col = (100, 255, 100) if game.player_role == "BLOCKER" else (255, 100, 100)
+                    col = C.COLOR_VALID_MOVE if game.player_role == "BLOCKER" else C.COLOR_MOUSE_POS
                 else:
                     wtxt = "SOARECELE A SCAPAT!"
-                    col = (100, 255, 100) if game.player_role == "MOUSE" else (255, 100, 100)
+                    col = C.COLOR_VALID_MOVE if game.player_role == "MOUSE" else C.COLOR_MOUSE_POS
                 
                 if game.mode == "PVP": col = (255, 215, 0)
 
                 img = font_title.render(wtxt, True, col)
-                scr.blit(img, img.get_rect(center=(W // 2, H // 2 - 20)))
-                sub = font_small.render("R - Restart | ESC - Menu", True, (200, 200, 200))
+                screen_center = img.get_rect(center=(W // 2, H // 2 - 20))
+                scr.blit(img, screen_center)
+                sub = font_small.render("R - Restart | ESC - Menu", True, C.COLOR_TEXT_GRAY)
                 scr.blit(sub, sub.get_rect(center=(W // 2, H // 2 + 40)))
 
         for e in pygame.event.get():
@@ -379,6 +349,7 @@ if __name__ == "__main__":
                         state = "GAME"
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
                     state = "MENU_ROLE"
+
 
             elif state == "GAME":
                 if e.type == pygame.KEYDOWN:
