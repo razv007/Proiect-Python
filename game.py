@@ -168,7 +168,8 @@ class Game:
         except:
             return False
 
-    def load_from_file(self, filename):
+    @staticmethod
+    def load_from_file(filename):
         """Load a game instance from a save file.
         
         Args:
